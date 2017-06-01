@@ -31,7 +31,7 @@ class InquiryRequest extends Request
 
             'ORDR' => $this->data['payment']['reference'],
             'CURR' => $this->data['payment']['amount']['currency'],
-            'TOTL' => $this->data['payment']['amount']['total'],
+            'TOTL' => $this->parseAmount($this->data['payment']['amount']['total']),
 
             'UNIQ' => $this->data['payer']['documentType'] . $this->data['payer']['document'],
             'NAME' => $this->data['payer']['name'] . ' ' . $this->data['payer']['surname'],
@@ -91,7 +91,7 @@ class InquiryRequest extends Request
 
         if (isset($this->data['additional'])) {
             foreach ($this->data['additional'] as $key => $value) {
-                $requestData['UDF[' . $key . ']'] = $value;
+                $requestData['UDF[' . strtoupper($key) . ']'] = $value;
             }
         }
 
@@ -101,10 +101,12 @@ class InquiryRequest extends Request
                     'PROD_TYPE[' . $index . ']' => isset($item['sku']) ? $item['sku'] : null,
                     'PROD_ITEM[' . $index . ']' => isset($item['name']) ? $item['name'] : null,
                     'PROD_QUANT[' . $index . ']' => isset($item['qty']) ? $item['qty'] : null,
-                    'PROD_PRICE[' . $index . ']' => isset($item['price']) ? $item['price'] : null,
+                    'PROD_PRICE[' . $index . ']' => isset($item['price']) ? $this->parseAmount($item['price']) : null,
                 ]);
             }
         }
+
+
 
         return $requestData;
     }

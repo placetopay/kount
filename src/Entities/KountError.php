@@ -137,7 +137,7 @@ class KountError
         'NO_HDR' => 'This error occurs when a RIS request goes to the database and there is no data available in the reply',
     ];
 
-    public static function errorKey($code)
+    public static function errorKey($code = null)
     {
         if ($code) {
             return isset(self::$ERRORS_CODES[$code]) ? self::$ERRORS_CODES[$code] : null;

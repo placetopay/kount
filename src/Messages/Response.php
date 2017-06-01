@@ -92,4 +92,19 @@ class Response
         return $this->errors;
     }
 
+    public function merchant()
+    {
+        return $this->data('MERC');
+    }
+
+    public function session()
+    {
+        return $this->data('SESS');
+    }
+
+    public function order()
+    {
+        return $this->data('ORDR');
+    }
+
 }

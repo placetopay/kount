@@ -72,11 +72,12 @@ class KountService
     public function inquiry($session, $request)
     {
         $request = $this->parseInquiryRequest($session, $request);
-        $result = $this->carrier->riskRequest($this->url(), 'POST', $request->asRequestData(), $request->asRequestHeaders());
+        $result = $this->carrier->riskRequest($this->risUrl(), 'POST', $request->asRequestData(), $request->asRequestHeaders());
+        return $result;
         return new InquiryResponse($result);
     }
 
-    public function url()
+    public function risUrl()
     {
         return $this->SANDBOX_RIS_URL;
     }

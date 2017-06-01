@@ -104,9 +104,14 @@ abstract class Request
      */
     public function asRequestHeaders()
     {
-       return [
-           'X-Kount-Api-Key' => $this->apiToken,
-       ];
+        return [
+            'X-Kount-Api-Key' => $this->apiToken,
+        ];
+    }
+
+    protected function parseAmount($total)
+    {
+       return (int)(round($total, 2) * 100);
     }
 
 }

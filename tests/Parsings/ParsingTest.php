@@ -13,7 +13,6 @@ class ParsingTest extends BaseTestCase
         ]);
 
         $data = [
-            'session' => '1',
             'payment' => [
                 'reference' => '1234',
                 'amount' => [
@@ -98,7 +97,7 @@ class ParsingTest extends BaseTestCase
             'SESS' => '123',
             'ORDR' => $data['payment']['reference'],
             'CURR' => $data['payment']['amount']['currency'],
-            'TOTL' => $data['payment']['amount']['total'],
+            'TOTL' => 1230000,
             'MACK' => $data['mack'],
 
             'PTYP' => 'CARD',
@@ -129,16 +128,104 @@ class ParsingTest extends BaseTestCase
             'S2CC' => $data['payment']['shipping']['address']['country'],
             'S2PN' => $data['payment']['shipping']['address']['phone'],
 
-            'UDF[key_1]' => $data['additional']['key_1'],
+            'UDF[KEY_1]' => $data['additional']['key_1'],
 
             'PROD_TYPE[0]' => $data['payment']['items'][0]['sku'],
             'PROD_ITEM[0]' => $data['payment']['items'][0]['name'],
             'PROD_QUANT[0]' => $data['payment']['items'][0]['qty'],
-            'PROD_PRICE[0]' => $data['payment']['items'][0]['price'],
+            'PROD_PRICE[0]' => 234000,
             'PROD_TYPE[1]' => $data['payment']['items'][1]['sku'],
             'PROD_ITEM[1]' => $data['payment']['items'][1]['name'],
             'PROD_QUANT[1]' => $data['payment']['items'][1]['qty'],
-            'PROD_PRICE[1]' => $data['payment']['items'][1]['price'],
+            'PROD_PRICE[1]' => 54300,
+
+            'IPAD' => $data['ipAddress'],
+            'UAGT' => $data['userAgent'],
+            'SITE' => 'DEFAULT',
+        ];
+
+        $this->assertEquals($requestData, $inquiryRequest->asRequestData(), 'Parses the inquiry data correctly');
+        $this->assertEquals([
+            'X-Kount-Api-Key' => 'TESTING',
+        ], $inquiryRequest->asRequestHeaders(), 'Parses the inquiry headers correctly');
+    }
+
+    public function testItParsesAShortRequest()
+    {
+        $service = new \PlacetoPay\Kount\KountService([
+            'merchant' => '201000',
+            'apiKey' => 'TESTING',
+            'website' => 'DEFAULT',
+        ]);
+
+        $data = [
+            'mack' => 'Y',
+            'payment' => [
+                'reference' => 'TEST_20170601_201117',
+                'description' => 'A numquam dolores et occaecati eum dolore.',
+                'amount' => [
+                    'currency' => 'COP',
+                    'total' => 134000
+                ],
+                'items' => [
+                    [
+                        'sku' => 1234,
+                        'name' => 'Testing Required Product',
+                        'price' => 134000,
+                        'qty' => 1,
+                    ]
+                ],
+                'allowPartial' => false
+            ],
+            // Card Related
+            'cardNumber' => '4111111111111111',
+            // M match, N Not match, X unavailable
+            'cvvStatus' => 'X',
+            'cardExpiration' => '12/20',
+            // Person related
+            'payer' => [
+                'document' => '1040035000',
+                'documentType' => 'CC',
+                'name' => 'Stanton',
+                'surname' => 'Gerhold',
+                'email' => 'dcallem88@msn.com',
+                'mobile' => '3006108300'
+            ],
+            // To organize
+            'ipAddress' => '127.0.0.1',
+            'userAgent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+        ];
+
+        $inquiryRequest = $service->parseInquiryRequest(4, $data);
+
+        $requestData = [
+            'VERS' => '0630',
+            'MODE' => 'Q',
+            'SDK' => 'PHP',
+            'SDK_VERSION' => 'PlacetoPay-0.0.1',
+
+            'MACK' => 'Y',
+            'MERC' => '201000',
+            'SESS' => 4,
+            'ORDR' => $data['payment']['reference'],
+            'CURR' => $data['payment']['amount']['currency'],
+            'TOTL' => 13400000,
+
+            'PTYP' => 'CARD',
+            'LAST4' => substr($data['cardNumber'], -4),
+            'PTOK' => $data['cardNumber'],
+            'CVVR' => $data['cvvStatus'],
+            'CCMM' => '12',
+            'CCYY' => '2020',
+
+            'UNIQ' => $data['payer']['documentType'] . $data['payer']['document'],
+
+            'NAME' => $data['payer']['name'] . ' ' . $data['payer']['surname'],
+            'EMAL' => $data['payer']['email'],
+            'PROD_TYPE[0]' => $data['payment']['items'][0]['sku'],
+            'PROD_ITEM[0]' => $data['payment']['items'][0]['name'],
+            'PROD_QUANT[0]' => $data['payment']['items'][0]['qty'],
+            'PROD_PRICE[0]' => 13400000,
 
             'IPAD' => $data['ipAddress'],
             'UAGT' => $data['userAgent'],
