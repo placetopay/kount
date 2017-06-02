@@ -82,7 +82,7 @@ class ParsingTest extends BaseTestCase
             'ipAddress' => '127.0.0.1',
             'userAgent' => 'Chrome XYZ',
             // To organize
-            'shipmentType' => 'SD',
+            'shipmentType' => \PlacetoPay\Kount\Messages\Request::SHIP_SAME,
         ];
 
         $inquiryRequest = $service->parseInquiryRequest('123', $data);
@@ -191,7 +191,6 @@ class ParsingTest extends BaseTestCase
                 'email' => 'dcallem88@msn.com',
                 'mobile' => '3006108300'
             ],
-            // To organize
             'ipAddress' => '127.0.0.1',
             'userAgent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
         ];

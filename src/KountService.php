@@ -25,7 +25,7 @@ class KountService
     protected $version = '0630';
     protected $sdkVersion = 'PlacetoPay-0.0.1';
 
-    protected $sandbox = true;
+    protected $sandbox = false;
 
     /**
      * @var Carrier
@@ -46,6 +46,10 @@ class KountService
             $this->carrier = new HttpCarrier();
         } else {
             $this->carrier = $settings['carrier'];
+        }
+
+        if (isset($settings['sandbox'])) {
+            $this->sandbox = filter_var($settings['sandbox'], FILTER_VALIDATE_BOOLEAN);
         }
     }
 
@@ -68,19 +72,40 @@ class KountService
      * @param string $session
      * @param InquiryRequest|array $request
      * @return InquiryResponse
+     * @throws KountServiceException
      */
     public function inquiry($session, $request)
     {
         $request = $this->parseInquiryRequest($session, $request);
-        $result = $this->carrier->riskRequest($this->risUrl(), 'POST', $request->asRequestData(), $request->asRequestHeaders());
-        return $result;
-        return new InquiryResponse($result);
+        try {
+            $result = $this->carrier->riskRequest($this->risUrl(), 'POST', $request->asRequestData(), $request->asRequestHeaders());
+            return new InquiryResponse($result);
+        } catch (\Exception $e) {
+            throw new KountServiceException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    public function dataCollectorUrl($session, $slug)
+    {
+        if($this->isSandbox()) {
+            $url = $this->SANDBOX_DDC_URL;
+        } else {
+            $url = $this->DDC_URL;
+        }
+        return $url . '/' . $slug . '?m=' . $this->merchant . '&s=' . $session;
     }
 
     public function risUrl()
     {
-        return $this->SANDBOX_RIS_URL;
+        if($this->isSandbox())
+            return $this->SANDBOX_RIS_URL;
+
+        return $this->RIS_URL;
     }
 
+    public function isSandbox()
+    {
+        return $this->sandbox;
+    }
 
 }

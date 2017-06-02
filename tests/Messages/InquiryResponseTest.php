@@ -63,6 +63,8 @@ class InquiryResponseTest extends BaseTestCase
         $this->assertEquals('P01J0KZN329Z', $response->kountCode());
         $this->assertEquals(33, $response->score());
         $this->assertTrue($response->shouldDecline());
+        $this->assertFalse($response->shouldApprove());
+        $this->assertFalse($response->shouldReview());
         $this->assertEquals('4C2410BA22A64E21BF0C73EA88E48D7E', $response->fingerprint());
         $this->assertEquals('81BBF7770C..D92909FF92.1867A9B2CB.D6112C09F7', $response->deviceLayers());
         $this->assertEquals([
