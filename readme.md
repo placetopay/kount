@@ -4,7 +4,7 @@
 
 This SDK can be installed easily through composer
 ```
-composer require dnetix/kount
+composer require placetopay/kount
 ```
 
 ## Usage
