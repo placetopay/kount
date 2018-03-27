@@ -9,6 +9,9 @@
             "email": "dnetix@gmail.com"
         }
     ],
+    "archive": {
+        "exclude": [".git", ".gitignore"]
+    },
     "autoload": {
         "psr-4": {
             "PlacetoPay\\Kount\\": "src/"
