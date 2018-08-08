@@ -47,6 +47,11 @@ class InquiryResponse extends Response
         return $this->data('AUTO') == 'R';
     }
 
+    public function decision()
+    {
+        return $this->data('AUTO');
+    }
+
     public function deviceLayers()
     {
         return $this->data('DEVICE_LAYERS');
