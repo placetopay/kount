@@ -33,12 +33,29 @@ class InquiryRequest extends Request
             'CURR' => $this->data['payment']['amount']['currency'],
             'TOTL' => $this->parseAmount($this->data['payment']['amount']['total']),
 
-            'UNIQ' => $this->data['payer']['documentType'] . $this->data['payer']['document'],
-            'NAME' => $this->data['payer']['name'] . ' ' . $this->data['payer']['surname'],
-            'EMAL' => $this->data['payer']['email'],
             'IPAD' => $this->data['ipAddress'],
             'UAGT' => $this->data['userAgent'],
         ];
+
+        if (isset($this->data['payer'])) {
+            $payer = $this->data['payer'];
+
+            if (isset($payer['documentType']) && isset($payer['document'])) {
+                $requestData['UNIQ'] = $payer['documentType'] . $payer['document'];
+            } else {
+                $requestData['UNIQ'] = 'NA';
+            }
+
+            if (isset($payer['name'])) {
+                $requestData['NAME'] = $payer['name'] . (isset($payer['surname']) ? ' ' . $payer['surname'] : '');
+            } else {
+                $requestData['NAME'] = 'NA';
+            }
+
+            if (isset($payer['email'])) {
+                $requestData['EMAL'] = $payer['email'];
+            }
+        }
 
         if (isset($this->data['mack'])) {
             $requestData['MACK'] = $this->data['mack'];
@@ -105,8 +122,6 @@ class InquiryRequest extends Request
                 ]);
             }
         }
-
-
 
         return $requestData;
     }
