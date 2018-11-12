@@ -15,12 +15,15 @@ abstract class Request
     const MODE_THRESHOLDS = 'W';
     // Kount Central thresholds-only inquiry
     const MODE_THRESHOLDS_ONLY = 'J';
+    // Update status with response
+    const MODE_UPDATE = 'X';
 
     public static $MODES = [
         self::MODE_INQUIRY,
         self::MODE_PHONE_ORDER,
         self::MODE_THRESHOLDS,
         self::MODE_THRESHOLDS_ONLY,
+        self::MODE_UPDATE,
     ];
 
     // Same day shipping
@@ -31,6 +34,9 @@ abstract class Request
     const SHIP_SECOND = '2D';
     // Standard shipping
     const SHIP_STANDARD = 'ST';
+
+    const STAT_APPROVED = 'A';
+    const STAT_DECLINED = 'D';
 
     public static $SHIPPINGS = [
         self::SHIP_SAME,

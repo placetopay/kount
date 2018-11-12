@@ -9,6 +9,8 @@ use PlacetoPay\Kount\Contracts\Carrier;
 use PlacetoPay\Kount\Exceptions\KountServiceException;
 use PlacetoPay\Kount\Messages\InquiryRequest;
 use PlacetoPay\Kount\Messages\InquiryResponse;
+use PlacetoPay\Kount\Messages\UpdateRequest;
+use PlacetoPay\Kount\Messages\UpdateResponse;
 
 class KountService
 {
@@ -68,6 +70,21 @@ class KountService
         return $request;
     }
 
+    public function parseInquiryUpdate($session, $request)
+    {
+        if (!($request instanceof UpdateRequest)) {
+            $request = new UpdateRequest($session, $request);
+        }
+
+        $request->setApiToken($this->apiKey)
+            ->setVersion($this->version)
+            ->setSdkVersion($this->sdkVersion)
+            ->setMerchant($this->merchant)
+            ->setWebsite($this->website);
+
+        return $request;
+    }
+
     /**
      * @param string $session
      * @param InquiryRequest|array $request
@@ -80,6 +97,23 @@ class KountService
         try {
             $result = $this->carrier->riskRequest($this->risUrl(), 'POST', $request->asRequestData(), $request->asRequestHeaders());
             return new InquiryResponse($result);
+        } catch (\Exception $e) {
+            throw new KountServiceException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @param string $session
+     * @param UpdateRequest|array $request
+     * @return UpdateResponse
+     * @throws KountServiceException
+     */
+    public function update($session, $request)
+    {
+        $request = $this->parseInquiryUpdate($session, $request);
+        try {
+            $result = $this->carrier->riskRequest($this->risUrl(), 'POST', $request->asRequestData(), $request->asRequestHeaders());
+            return new UpdateResponse($result);
         } catch (\Exception $e) {
             throw new KountServiceException($e->getMessage(), $e->getCode(), $e);
         }
