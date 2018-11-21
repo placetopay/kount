@@ -15,7 +15,7 @@ use PlacetoPay\Kount\Messages\UpdateResponse;
 class KountService
 {
 
-    protected $DDC_URL = 'https://prd.kaptcha.com';
+    protected $DDC_URL = 'https://ssl.kaptcha.com';
     protected $RIS_URL = 'https://risk.kount.net';
     protected $SANDBOX_DDC_URL = 'https://tst.kaptcha.com';
     protected $SANDBOX_RIS_URL = 'https://risk.test.kount.net';
