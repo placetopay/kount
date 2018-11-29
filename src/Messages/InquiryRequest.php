@@ -55,6 +55,10 @@ class InquiryRequest extends Request
             if (isset($payer['email'])) {
                 $requestData['EMAL'] = $payer['email'];
             }
+
+            if (isset($payer['mobile'])) {
+                $requestData['B2PN'] = $payer['mobile'];
+            }
         }
 
         if (isset($this->data['mack'])) {
