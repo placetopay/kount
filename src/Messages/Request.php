@@ -117,7 +117,7 @@ abstract class Request
 
     protected function parseAmount($total)
     {
-       return (int)(round($total, 2) * 100);
+        return (int)(round($total, 2) * 100);
     }
 
 }

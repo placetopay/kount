@@ -12,7 +12,7 @@ class InquiryResponse extends Response
     {
         if (!$this->rules) {
             $i = 0;
-            while ($rule = $this->data('RULE_ID_' .$i)) {
+            while ($rule = $this->data('RULE_ID_' . $i)) {
                 $this->rules[$rule] = $this->data('RULE_DESCRIPTION_' . $i);
                 $i++;
             }

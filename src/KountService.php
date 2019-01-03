@@ -121,7 +121,7 @@ class KountService
 
     public function dataCollectorUrl($session, $slug)
     {
-        if($this->isSandbox()) {
+        if ($this->isSandbox()) {
             $url = $this->SANDBOX_DDC_URL;
         } else {
             $url = $this->DDC_URL;
@@ -131,8 +131,9 @@ class KountService
 
     public function risUrl()
     {
-        if($this->isSandbox())
+        if ($this->isSandbox()) {
             return $this->SANDBOX_RIS_URL;
+        }
 
         return $this->RIS_URL;
     }

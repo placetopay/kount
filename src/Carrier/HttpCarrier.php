@@ -19,12 +19,16 @@ class HttpCarrier implements Carrier
 
         if ($method == 'POST') {
             $response = $client->post($url, $data);
-        } else if ($method == 'GET') {
-            $response = $client->get($url, $data);
-        } else if ($method == 'PUT') {
-            $response = $client->put($url, $data);
         } else {
-            throw new \Exception("No valid method for this request");
+            if ($method == 'GET') {
+                $response = $client->get($url, $data);
+            } else {
+                if ($method == 'PUT') {
+                    $response = $client->put($url, $data);
+                } else {
+                    throw new \Exception("No valid method for this request");
+                }
+            }
         }
 
         return $response->getBody()->getContents();
