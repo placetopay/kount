@@ -1,31 +1,34 @@
 {
-    "name": "placetopay/kount",
-    "description": "A SDK to connect with Kount security services",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Diego Calle",
-            "email": "dnetix@gmail.com"
-        }
-    ],
-    "archive": {
-        "exclude": [".git", ".gitignore"]
-    },
-    "autoload": {
-        "psr-4": {
-            "PlacetoPay\\Kount\\": "src/"
-        }
-    },
-    "require": {
-        "guzzlehttp/guzzle": ">=5.3"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.7"
-    },
-    "autoload-dev": {
-        "classmap": [
-            "tests/"
-        ]
+  "name": "placetopay/kount",
+  "description": "A SDK to connect with Kount security services",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Diego Calle",
+      "email": "dnetix@gmail.com"
     }
+  ],
+  "archive": {
+    "exclude": [
+      ".git",
+      ".gitignore"
+    ]
+  },
+  "autoload": {
+    "psr-4": {
+      "PlacetoPay\\Kount\\": "src/"
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": ">=5.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7"
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/"
+    ]
+  }
 }
