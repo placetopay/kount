@@ -16,7 +16,7 @@ abstract class Request
     // Kount Central thresholds-only inquiry
     const MODE_THRESHOLDS_ONLY = 'J';
     // Update status with response
-    const MODE_UPDATE = 'X';
+    const MODE_UPDATE = 'U';
 
     public static $MODES = [
         self::MODE_INQUIRY,
