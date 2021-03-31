@@ -73,6 +73,7 @@ class InquiryRequest extends Request
                 'PTOK' => $this->data['cardNumber'],
                 'CCMM' => $cardExpiration[0],
                 'CCYY' => '20' . $cardExpiration[1],
+                'PENC' => 'MASK',
             ]);
             if (isset($this->data['cvvStatus'])) {
                 $requestData['CVVR'] = $this->data['cvvStatus'];
