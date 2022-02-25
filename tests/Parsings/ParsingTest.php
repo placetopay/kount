@@ -144,6 +144,7 @@ class ParsingTest extends BaseTestCase
             'IPAD' => $data['ipAddress'],
             'UAGT' => $data['userAgent'],
             'SITE' => 'DEFAULT',
+            'PENC' => 'MASK'
         ];
 
         $this->assertEquals($requestData, $inquiryRequest->asRequestData(), 'Parses the inquiry data correctly');
@@ -218,11 +219,13 @@ class ParsingTest extends BaseTestCase
             'CVVR' => $data['cvvStatus'],
             'CCMM' => '12',
             'CCYY' => '2020',
+            'PENC' => 'MASK',
 
             'UNIQ' => $data['payer']['documentType'] . $data['payer']['document'],
 
             'NAME' => $data['payer']['name'] . ' ' . $data['payer']['surname'],
             'EMAL' => $data['payer']['email'],
+            'B2PN' => $data['payer']['mobile'],
             'PROD_TYPE[0]' => $data['payment']['items'][0]['sku'],
             'PROD_ITEM[0]' => $data['payment']['items'][0]['name'],
             'PROD_QUANT[0]' => $data['payment']['items'][0]['qty'],
