@@ -1,12 +1,9 @@
 <?php
 
-
 namespace PlacetoPay\Kount\Entities;
-
 
 class KountError
 {
-
     protected static $ERRORS_CODES = [
         201 => 'MISSING_VERS',
         202 => 'MISSING_MODE',
@@ -152,5 +149,4 @@ class KountError
         }
         return self::$EN;
     }
-
 }

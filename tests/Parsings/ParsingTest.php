@@ -1,9 +1,7 @@
 <?php
 
-
 class ParsingTest extends BaseTestCase
 {
-
     public function testItParsesTheInquiryRequestInformationCorrectly()
     {
         $service = new \PlacetoPay\Kount\KountService([
@@ -35,7 +33,7 @@ class ParsingTest extends BaseTestCase
                         'qty' => '2',
                         'price' => '543',
                         'tax' => '56',
-                    ]
+                    ],
                 ],
                 'shipping' => [
                     'name' => 'Diego',
@@ -165,7 +163,7 @@ class ParsingTest extends BaseTestCase
                 'description' => 'A numquam dolores et occaecati eum dolore.',
                 'amount' => [
                     'currency' => 'COP',
-                    'total' => 134000
+                    'total' => 134000,
                 ],
                 'items' => [
                     [
@@ -173,9 +171,9 @@ class ParsingTest extends BaseTestCase
                         'name' => 'Testing Required Product',
                         'price' => 134000,
                         'qty' => 1,
-                    ]
+                    ],
                 ],
-                'allowPartial' => false
+                'allowPartial' => false,
             ],
             // Card Related
             'cardNumber' => '4111111111111111',
@@ -189,7 +187,7 @@ class ParsingTest extends BaseTestCase
                 'name' => 'Stanton',
                 'surname' => 'Gerhold',
                 'email' => 'dcallem88@msn.com',
-                'mobile' => '3006108300'
+                'mobile' => '3006108300',
             ],
             'ipAddress' => '127.0.0.1',
             'userAgent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
@@ -236,5 +234,4 @@ class ParsingTest extends BaseTestCase
             'X-Kount-Api-Key' => 'TESTING',
         ], $inquiryRequest->asRequestHeaders(), 'Parses the inquiry headers correctly');
     }
-
 }

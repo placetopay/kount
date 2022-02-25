@@ -1,14 +1,11 @@
 <?php
 
-
 namespace PlacetoPay\Kount\Carrier;
-
 
 use PlacetoPay\Kount\Contracts\Carrier;
 
 class HttpCarrier implements Carrier
 {
-
     public function riskRequest($url, $method, $data = [], $headers = [])
     {
         $client = new \GuzzleHttp\Client();
@@ -26,12 +23,11 @@ class HttpCarrier implements Carrier
                 if ($method == 'PUT') {
                     $response = $client->put($url, $data);
                 } else {
-                    throw new \Exception("No valid method for this request");
+                    throw new \Exception('No valid method for this request');
                 }
             }
         }
 
         return $response->getBody()->getContents();
     }
-
 }

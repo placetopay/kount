@@ -1,12 +1,9 @@
 <?php
 
-
 namespace PlacetoPay\Kount\Messages;
-
 
 class InquiryRequest extends Request
 {
-
     public function __construct($session, $data = [])
     {
         parent::__construct($session, $data);
@@ -129,5 +126,4 @@ class InquiryRequest extends Request
 
         return $requestData;
     }
-
 }

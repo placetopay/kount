@@ -1,22 +1,19 @@
 <?php
 
-
 namespace PlacetoPay\Kount\Messages;
-
 
 abstract class Request
 {
-
     // Normal inquiry
-    const MODE_INQUIRY = 'Q';
+    public const MODE_INQUIRY = 'Q';
     // Phone order inquiry
-    const MODE_PHONE_ORDER = 'P';
+    public const MODE_PHONE_ORDER = 'P';
     // Kount Central normal inquiry with thresholds
-    const MODE_THRESHOLDS = 'W';
+    public const MODE_THRESHOLDS = 'W';
     // Kount Central thresholds-only inquiry
-    const MODE_THRESHOLDS_ONLY = 'J';
+    public const MODE_THRESHOLDS_ONLY = 'J';
     // Update status with response
-    const MODE_UPDATE = 'U';
+    public const MODE_UPDATE = 'U';
 
     public static $MODES = [
         self::MODE_INQUIRY,
@@ -27,16 +24,16 @@ abstract class Request
     ];
 
     // Same day shipping
-    const SHIP_SAME = 'SD';
+    public const SHIP_SAME = 'SD';
     // Next day shipping
-    const SHIP_NEXT = 'ND';
+    public const SHIP_NEXT = 'ND';
     // Second day shipping
-    const SHIP_SECOND = '2D';
+    public const SHIP_SECOND = '2D';
     // Standard shipping
-    const SHIP_STANDARD = 'ST';
+    public const SHIP_STANDARD = 'ST';
 
-    const STAT_APPROVED = 'A';
-    const STAT_DECLINED = 'D';
+    public const STAT_APPROVED = 'A';
+    public const STAT_DECLINED = 'D';
 
     public static $SHIPPINGS = [
         self::SHIP_SAME,
@@ -103,7 +100,7 @@ abstract class Request
     /**
      * @return array
      */
-    public abstract function asRequestData();
+    abstract public function asRequestData();
 
     /**
      * @return array
@@ -119,5 +116,4 @@ abstract class Request
     {
         return (int)(round($total, 2) * 100);
     }
-
 }
