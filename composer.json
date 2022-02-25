@@ -31,5 +31,13 @@
     "psr-4": {
       "Tests\\": "tests/"
     }
+  },
+  "scripts": {
+    "phpcs": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
+    "phpunit": "phpunit --bootstrap vendor/autoload.php --verbose --testdox tests/",
+    "test": [
+      "@phpcs",
+      "@phpunit"
+    ]
   }
 }
