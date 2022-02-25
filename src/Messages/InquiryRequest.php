@@ -1,12 +1,9 @@
 <?php
 
-
 namespace PlacetoPay\Kount\Messages;
-
 
 class InquiryRequest extends Request
 {
-
     public function __construct($session, $data = [])
     {
         parent::__construct($session, $data);
@@ -70,7 +67,7 @@ class InquiryRequest extends Request
             $requestData = array_merge($requestData, [
                 'PTYP' => 'CARD',
                 'LAST4' => substr($this->data['cardNumber'], -4),
-                'PTOK' => $this->data['cardNumber'],
+                'PTOK' => $this->maskNumber($this->data['cardNumber']),
                 'CCMM' => $cardExpiration[0],
                 'CCYY' => '20' . $cardExpiration[1],
                 'PENC' => 'MASK',
@@ -131,4 +128,14 @@ class InquiryRequest extends Request
         return $requestData;
     }
 
+    private function maskNumber(string $number): string
+    {
+        $number = trim($number);
+
+        if (preg_match('/\d{14,19}/', $number)) {
+            $number = preg_replace('/(\d{6})\d+(\d{4})/', '$1' . str_repeat('X', strlen($number) - 10) . '$2', $number);
+        }
+
+        return $number;
+    }
 }

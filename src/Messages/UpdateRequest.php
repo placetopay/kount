@@ -1,12 +1,9 @@
 <?php
 
-
 namespace PlacetoPay\Kount\Messages;
-
 
 class UpdateRequest extends Request
 {
-
     public function __construct($session, $data = [])
     {
         parent::__construct($session, $data);
@@ -37,5 +34,4 @@ class UpdateRequest extends Request
 
         return $requestData;
     }
-
 }

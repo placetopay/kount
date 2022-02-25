@@ -1,14 +1,11 @@
 <?php
 
-
 namespace PlacetoPay\Kount\Messages;
-
 
 use PlacetoPay\Kount\Entities\KountError;
 
 class Response
 {
-
     protected $raw;
     protected $data;
 
@@ -58,7 +55,7 @@ class Response
     }
 
     /**
-     * Returns the KEY error that can be translated into an message
+     * Returns the KEY error that can be translated into an message.
      * @return string
      */
     public function errorKey()
@@ -83,7 +80,7 @@ class Response
     public function errorCount()
     {
         $this->loadErrors();
-        return sizeof($this->errors);
+        return count($this->errors);
     }
 
     public function errors()
@@ -106,5 +103,4 @@ class Response
     {
         return $this->data('ORDR');
     }
-
 }

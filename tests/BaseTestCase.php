@@ -1,8 +1,11 @@
 <?php
 
-class BaseTestCase extends PHPUnit_Framework_TestCase
-{
+namespace Tests;
 
+use PHPUnit\Framework\TestCase;
+
+class BaseTestCase extends TestCase
+{
     public function serialize($data)
     {
         return base64_encode(serialize($data));
@@ -12,5 +15,4 @@ class BaseTestCase extends PHPUnit_Framework_TestCase
     {
         return unserialize(base64_decode($coded));
     }
-
 }

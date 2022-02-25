@@ -3,4 +3,6 @@
 tests/coverage
 vendor
 packages
-
+.DS_Store
+.php-cs-fixer.cache
+.phpunit.result.cache

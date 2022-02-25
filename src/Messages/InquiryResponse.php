@@ -1,8 +1,6 @@
 <?php
 
-
 namespace PlacetoPay\Kount\Messages;
-
 
 class InquiryResponse extends Response
 {

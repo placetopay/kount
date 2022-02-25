@@ -1,31 +1,22 @@
 <?php
 
+namespace Tests\Messages;
+
+use Tests\BaseTestCase;
 
 class InquiryResponseTest extends BaseTestCase
 {
-
     public function testItParsesAnErrorResponse()
     {
-        $result = $this->unserialize("czoxNToiTU9ERT1FCkVSUk89MjAxIjs=");
+        $result = $this->unserialize('czoxNToiTU9ERT1FCkVSUk89MjAxIjs=');
         $response = new \PlacetoPay\Kount\Messages\InquiryResponse($result);
 
         $this->assertFalse($response->isSuccessful());
         $this->assertEquals(201, $response->errorCode());
         $this->assertEquals('MISSING_VERS', $response->errorKey());
-        $this->assertEquals(2, sizeof($response->data()));
+        $this->assertEquals(2, count($response->data()));
         $this->assertNotNull(\PlacetoPay\Kount\Entities\KountError::errorMessage($response->errorKey()));
         $this->assertNull($response->fingerprint());
-    }
-
-    public function testItReturnsAnArrayWhenNeeded()
-    {
-        $this->assertArraySubset([
-            201 => 'MISSING_VERS',
-        ], \PlacetoPay\Kount\Entities\KountError::errorKey());
-
-        $this->assertArraySubset([
-            'MISSING_VERS' => 'Missing version of Kount, this is built into SDK but must be supplied by merchant if not using the SDK',
-        ], \PlacetoPay\Kount\Entities\KountError::errorMessage());
     }
 
     public function testItParsesAnSiteErrorResponse()
@@ -88,5 +79,4 @@ class InquiryResponseTest extends BaseTestCase
         $this->assertFalse($response->hasProxy());
         $this->assertTrue($response->hasJavascript());
     }
-
 }

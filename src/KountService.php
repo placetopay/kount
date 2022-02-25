@@ -1,8 +1,6 @@
 <?php
 
-
 namespace PlacetoPay\Kount;
-
 
 use PlacetoPay\Kount\Carrier\HttpCarrier;
 use PlacetoPay\Kount\Contracts\Carrier;
@@ -14,7 +12,6 @@ use PlacetoPay\Kount\Messages\UpdateResponse;
 
 class KountService
 {
-
     protected $DDC_URL = 'https://ssl.kaptcha.com';
     protected $RIS_URL = 'https://risk.kount.net';
     protected $SANDBOX_DDC_URL = 'https://tst.kaptcha.com';
@@ -142,5 +139,4 @@ class KountService
     {
         return $this->sandbox;
     }
-
 }
