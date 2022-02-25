@@ -1,5 +1,9 @@
 <?php
 
+namespace Tests\Parsings;
+
+use Tests\BaseTestCase;
+
 class ParsingTest extends BaseTestCase
 {
     public function testItParsesTheInquiryRequestInformationCorrectly()
@@ -227,6 +231,7 @@ class ParsingTest extends BaseTestCase
             'IPAD' => $data['ipAddress'],
             'UAGT' => $data['userAgent'],
             'SITE' => 'DEFAULT',
+            'B2PN' => '3006108300',
         ];
 
         $this->assertEquals($requestData, $inquiryRequest->asRequestData(), 'Parses the inquiry data correctly');

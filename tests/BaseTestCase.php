@@ -1,6 +1,10 @@
 <?php
 
-class BaseTestCase extends PHPUnit_Framework_TestCase
+namespace Tests;
+
+use PHPUnit\Framework\TestCase;
+
+class BaseTestCase extends TestCase
 {
     public function serialize($data)
     {

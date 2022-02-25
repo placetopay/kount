@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="./vendor/autoload.php"
+         bootstrap="vendor/autoload.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -9,15 +9,13 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="Library Test Suite">
+        <testsuite name="Feature">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src</directory>
-            <exclude>
-            </exclude>
+            <directory suffix=".php">./app</directory>
         </whitelist>
     </filter>
     <php>
@@ -25,7 +23,8 @@
         <env name="K_API_KEY" value=""/>
     </php>
     <logging>
-        <log type="coverage-html" target="./tests/coverage" charset="UTF-8" yui="true" highlight="true"
-             lowUpperBound="50" highUpperBound="80"></log>
+        <log type="coverage-html" target="./tests/coverage"/>
+        <log type="coverage-clover" target="./tests/coverage/coverage.xml"/>
+        <log type="junit" target="./tests/coverage/tests.xml"/>
     </logging>
 </phpunit>
