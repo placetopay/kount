@@ -104,7 +104,7 @@ class ParsingTest extends BaseTestCase
 
             'PTYP' => 'CARD',
             'LAST4' => substr($data['cardNumber'], -4),
-            'PTOK' => $data['cardNumber'],
+            'PTOK' => '411111XXXXXX1111',
             'CVVR' => $data['cvvStatus'],
             'CCMM' => '12',
             'CCYY' => '2020',
@@ -144,7 +144,7 @@ class ParsingTest extends BaseTestCase
             'IPAD' => $data['ipAddress'],
             'UAGT' => $data['userAgent'],
             'SITE' => 'DEFAULT',
-            'PENC' => 'MASK'
+            'PENC' => 'MASK',
         ];
 
         $this->assertEquals($requestData, $inquiryRequest->asRequestData(), 'Parses the inquiry data correctly');
@@ -215,7 +215,7 @@ class ParsingTest extends BaseTestCase
 
             'PTYP' => 'CARD',
             'LAST4' => substr($data['cardNumber'], -4),
-            'PTOK' => $data['cardNumber'],
+            'PTOK' => '411111XXXXXX1111',
             'CVVR' => $data['cvvStatus'],
             'CCMM' => '12',
             'CCYY' => '2020',
