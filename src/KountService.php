@@ -2,11 +2,11 @@
 
 namespace PlacetoPay\Kount;
 
-use PlacetoPay\Kount\Carrier\HttpCarrier;
-use PlacetoPay\Kount\Contracts\Carrier;
+use GuzzleHttp\Client;
 use PlacetoPay\Kount\Exceptions\KountServiceException;
 use PlacetoPay\Kount\Messages\InquiryRequest;
 use PlacetoPay\Kount\Messages\InquiryResponse;
+use PlacetoPay\Kount\Messages\Request;
 use PlacetoPay\Kount\Messages\UpdateRequest;
 use PlacetoPay\Kount\Messages\UpdateResponse;
 
@@ -27,9 +27,9 @@ class KountService
     protected $sandbox = false;
 
     /**
-     * @var Carrier
+     * @var Client
      */
-    protected $carrier;
+    protected $client;
 
     public function __construct($settings)
     {
@@ -41,10 +41,10 @@ class KountService
         $this->merchant = $settings['merchant'];
         $this->website = $settings['website'];
 
-        if (!isset($settings['carrier'])) {
-            $this->carrier = new HttpCarrier();
+        if (!isset($settings['client'])) {
+            $this->client = new Client();
         } else {
-            $this->carrier = $settings['carrier'];
+            $this->client = $settings['client'];
         }
 
         if (isset($settings['sandbox'])) {
@@ -82,38 +82,28 @@ class KountService
         return $request;
     }
 
-    /**
-     * @param string $session
-     * @param InquiryRequest|array $request
-     * @return InquiryResponse
-     * @throws KountServiceException
-     */
-    public function inquiry($session, $request)
+    public function inquiry(string $session, $request): InquiryResponse
     {
         $request = $this->parseInquiryRequest($session, $request);
-        try {
-            $result = $this->carrier->riskRequest($this->risUrl(), 'POST', $request->asRequestData(), $request->asRequestHeaders());
-            return new InquiryResponse($result);
-        } catch (\Exception $e) {
-            throw new KountServiceException($e->getMessage(), $e->getCode(), $e);
-        }
+        return new InquiryResponse($this->makeRequest($request));
     }
 
-    /**
-     * @param string $session
-     * @param UpdateRequest|array $request
-     * @return UpdateResponse
-     * @throws KountServiceException
-     */
     public function update($session, $request)
     {
         $request = $this->parseInquiryUpdate($session, $request);
-        try {
-            $result = $this->carrier->riskRequest($this->risUrl(), 'POST', $request->asRequestData(), $request->asRequestHeaders());
-            return new UpdateResponse($result);
-        } catch (\Exception $e) {
-            throw new KountServiceException($e->getMessage(), $e->getCode(), $e);
-        }
+        return new UpdateResponse($this->makeRequest($request));
+    }
+
+    private function makeRequest(Request $request): string
+    {
+        $response = $this->client->post(
+            $this->risUrl(),
+            [
+                'headers' => $request->asRequestHeaders(),
+                'form_params' => $request->asRequestData(),
+            ]
+        );
+        return $response->getBody()->getContents();
     }
 
     public function dataCollectorUrl($session, $slug)
