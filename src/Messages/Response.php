@@ -3,6 +3,7 @@
 namespace PlacetoPay\Kount\Messages;
 
 use PlacetoPay\Kount\Entities\KountError;
+use PlacetoPay\Kount\Exceptions\KountServiceException;
 
 class Response
 {
@@ -19,6 +20,10 @@ class Response
             list($key, $value) = explode('=', $line, 2);
             $this->data[$key] = $value;
         }
+
+        if ($this->data('MODE') == 'E') {
+            throw KountServiceException::forErrorResponse($this);
+        }
     }
 
     public function raw()
@@ -26,28 +31,28 @@ class Response
         return $this->raw;
     }
 
-    public function data($key = null)
+    public function data($key = null, $default = null)
     {
         if ($key) {
             if (isset($this->data[$key])) {
                 return $this->data[$key];
             }
-            return null;
+            return $default;
         }
         return $this->data;
     }
 
-    // State related
+    // Error related
 
-    public function isSuccessful()
+    public function isErrorResponse(): bool
     {
-        if ($this->data('MODE') != 'E') {
-            return true;
-        }
-        return false;
+        return $this->data('MODE') === 'E';
     }
 
-    // Error related
+    public function errorCount(): int
+    {
+        return (int)$this->data('ERROR_COUNT');
+    }
 
     public function errorCode()
     {
@@ -66,27 +71,19 @@ class Response
         return null;
     }
 
-    protected function loadErrors()
+    public function errors(): array
     {
-        if (!$this->errors) {
-            $i = 0;
-            while ($error = $this->data('ERROR_' . $i)) {
-                $this->errors[] = $this->data('ERROR_' . $i);
-                $i++;
+        $messages = [];
+        if ($this->isErrorResponse()) {
+            if ($this->errorCount()) {
+                for ($i = 0; $i < $this->data('ERROR_COUNT', 0); $i++) {
+                    $messages[] = $this->data('ERROR_' . $i);
+                }
+            } else {
+                $messages[] = $this->errorKey();
             }
         }
-    }
-
-    public function errorCount()
-    {
-        $this->loadErrors();
-        return count($this->errors);
-    }
-
-    public function errors()
-    {
-        $this->loadErrors();
-        return $this->errors;
+        return $messages;
     }
 
     public function merchant()
