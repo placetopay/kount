@@ -34,7 +34,7 @@ class MockClient
     {
         return $this->request;
     }
-    
+
     public function data()
     {
         return $this->data;
