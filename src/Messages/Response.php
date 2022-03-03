@@ -3,6 +3,7 @@
 namespace PlacetoPay\Kount\Messages;
 
 use PlacetoPay\Kount\Entities\KountError;
+use PlacetoPay\Kount\Exceptions\KountServiceException;
 
 class Response
 {
@@ -18,6 +19,10 @@ class Response
         foreach ($lines as $line) {
             list($key, $value) = explode('=', $line, 2);
             $this->data[$key] = $value;
+        }
+
+        if($this->data('MODE') == 'E') {
+            throw KountServiceException::forErrorResponse($this->data);
         }
     }
 
