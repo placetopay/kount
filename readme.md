@@ -125,12 +125,8 @@ $data = [
 Please try to provide as much information as you can, but there is NOT required shipping, gender, shipmentType, more than 1 item (It has to be at least one), address for payer information
 
 ```
-$response = $service->inquiry(THE_SESSION, $data);
-```
-Please refer to the InquiryResponse and Response class to see all the available methods but the main ones are
-
-```
-if ($response->isSuccessful()){
+try {
+    $response = $service->inquiry(THE_SESSION, $data);
     // For trace purposes if you want
     $kountCode = $response->kountCode();
     // For trace purposes if you want
@@ -142,10 +138,7 @@ if ($response->isSuccessful()){
     } else {
         // The decision it's to review
     }
-} else {
-    // There was a problem with the connection or the request log the error and review it
-    $error = $response->errorKey();
-    // This one is an array with all the errors from Kount
-    $errors = $response->errors();
+} catch (KountServiceException $e) {
+    // Handle the error message
 }
 ```
