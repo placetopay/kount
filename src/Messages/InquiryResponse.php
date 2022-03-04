@@ -23,9 +23,9 @@ class InquiryResponse extends Response
         return $this->data('TRAN');
     }
 
-    public function score()
+    public function score(): int
     {
-        return $this->data('SCOR');
+        return (int)$this->data('SCOR');
     }
 
     // Decision based
