@@ -142,3 +142,15 @@ try {
     // Handle the error message
 }
 ```
+
+### Mocked responses
+
+If you change the client on the settings for the mock client the responses would be mocked ones and the real service will not be used
+
+```
+return new KountService([
+    'client' => MockClient::client(),
+    ...
+]);
+```
+
