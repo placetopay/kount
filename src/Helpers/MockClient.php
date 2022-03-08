@@ -82,23 +82,109 @@ class MockClient
 
     public function handleQuery()
     {
-        $response = '';
+        $response = [
+            'VERS' => '0630',
+            'MODE' => 'Q',
+            'TRAN' => $this->getData('TRAN'),
+            'MERC' => $this->getData('MERC'),
+            'SESS' => $this->getData('SESS'),
+            'ORDR' => $this->getData('ORDR'),
+            'AUTO' => 'A',
+            'SCOR' => '30',
+            'GEOX' => 'CO',
+            'BRND' => 'VISA',
+            'REGN' => 'CO_02',
+            'NETW' => 'N',
+            'KAPT' => 'N',
+            'CARDS' => '1',
+            'DEVICES' => '1',
+            'EMAILS' => '1',
+            'VELO' => '0',
+            'VMAX' => '0',
+            'SITE' => 'DEFAULT',
+            'DEVICE_LAYERS' => '....',
+            'FINGERPRINT' => '',
+            'TIMEZONE' => '',
+            'LOCALTIME' => ' ',
+            'REGION' => '',
+            'COUNTRY' => '',
+            'PROXY' => '',
+            'JAVASCRIPT' => '',
+            'FLASH' => '',
+            'COOKIES' => '',
+            'HTTP_COUNTRY' => '',
+            'LANGUAGE' => '',
+            'MOBILE_DEVICE' => '',
+            'MOBILE_TYPE' => '',
+            'MOBILE_FORWARDER' => '',
+            'VOICE_DEVICE' => '',
+            'PC_REMOTE' => '',
+            'RULES_TRIGGERED' => '1',
+            'RULE_ID_0' => '693746',
+            'RULE_DESCRIPTION_0' => 'GEOX Lower Risk Review Countries',
+            'COUNTERS_TRIGGERED' => '1',
+            'COUNTER_NAME_0' => 'PAISESPARAREVISION',
+            'COUNTER_VALUE_0' => '1',
+            'REASON_CODE' => '',
+            'MASTERCARD' => '',
+            'DDFS' => '',
+            'DSR' => '',
+            'UAS' => '',
+            'BROWSER' => '',
+            'OS' => '',
+            'PIP_IPAD' => '',
+            'PIP_LAT' => '',
+            'PIP_LON' => '',
+            'PIP_COUNTRY' => '',
+            'PIP_REGION' => '',
+            'PIP_CITY' => '',
+            'PIP_ORG' => '',
+            'IP_IPAD' => '',
+            'IP_LAT' => '',
+            'IP_LON' => '',
+            'IP_COUNTRY' => '',
+            'IP_REGION' => '',
+            'IP_CITY' => '',
+            'IP_ORG' => '',
+            'WARNING_COUNT' => '0',
+        ];
 
-        switch ($this->getData('SESS')) {
+        switch ($this->getData('ORDR')) {
             case 'AUTH_ERR':
-                $response = json_decode('"MODE=E\nERRO=501\nERROR_0=501 UNAUTH_REQ\nERROR_COUNT=1\nWARNING_COUNT=0"');
+                $response = [
+                    'MODE' => 'E',
+                    'ERRO' => '501',
+                    'ERROR_0' => '501 UNAUTH_REQ',
+                    'ERROR_COUNT' => '1',
+                    'WARNING_COUNT' => '0',
+                ];
+                break;
+            case 'REVIEW':
+                $response['AUTO'] = 'R';
+                break;
+            case 'DECLINE':
+                $response['AUTO'] = 'D';
                 break;
             default:
-                $response = json_decode('"VERS=0630\nMODE=Q\nTRAN=KKTJ057J349P\nMERC=' . $this->getData('MERC') . '\nSESS=' . $this->getData('SESS') . '\nORDR=1234567890\nAUTO=A\nSCOR=30\nGEOX=CO\nBRND=VISA\nREGN=CO_02\nNETW=N\nKAPT=N\nCARDS=1\nDEVICES=1\nEMAILS=1\nVELO=0\nVMAX=0\nSITE=DEFAULT\nDEVICE_LAYERS=....\nFINGERPRINT=\nTIMEZONE=\nLOCALTIME= \nREGION=\nCOUNTRY=\nPROXY=\nJAVASCRIPT=\nFLASH=\nCOOKIES=\nHTTP_COUNTRY=\nLANGUAGE=\nMOBILE_DEVICE=\nMOBILE_TYPE=\nMOBILE_FORWARDER=\nVOICE_DEVICE=\nPC_REMOTE=\nRULES_TRIGGERED=1\nRULE_ID_0=693746\nRULE_DESCRIPTION_0=GEOX Lower Risk Review Countries\nCOUNTERS_TRIGGERED=1\nCOUNTER_NAME_0=PAISESPARAREVISION\nCOUNTER_VALUE_0=1\nREASON_CODE=\nMASTERCARD=\nDDFS=\nDSR=\nUAS=\nBROWSER=\nOS=\nPIP_IPAD=\nPIP_LAT=\nPIP_LON=\nPIP_COUNTRY=\nPIP_REGION=\nPIP_CITY=\nPIP_ORG=\nIP_IPAD=\nIP_LAT=\nIP_LON=\nIP_COUNTRY=\nIP_REGION=\nIP_CITY=\nIP_ORG=\nWARNING_COUNT=0"');
+                $response['AUTO'] = 'A';
                 break;
         }
 
-        return $this->response(200, $response);
+        return $this->response(200, $this->parseResponse($response));
     }
 
     public function getData(string $attribute)
     {
         return $this->data[$attribute] ?? null;
+    }
+
+    private function parseResponse(array $response): string
+    {
+        foreach ($response as $key => $value) {
+            $response[$key] = $key . '=' . $value;
+        }
+
+        return implode("\n", $response);
     }
 
     public static function client(): Client

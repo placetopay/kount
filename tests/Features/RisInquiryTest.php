@@ -10,7 +10,7 @@ class RisInquiryTest extends BaseTestCase
 {
     public function basicRequest(string $session, array $overrides = []): Response
     {
-        $request = array_replace([
+        $request = array_replace_recursive([
             'payment' => [
                 'reference' => '1234',
                 'amount' => [
@@ -90,10 +90,14 @@ class RisInquiryTest extends BaseTestCase
     /**
      * @test
      */
-    public function it_handles_a_basic_request()
+    public function it_handles_a_basic_error()
     {
         $this->expectException(KountServiceException::class);
         $this->expectExceptionMessage('501');
-        $this->basicRequest('AUTH_ERR');
+        $this->basicRequest('CO1234', [
+            'payment' => [
+                'reference' => 'AUTH_ERR',
+            ],
+        ]);
     }
 }
