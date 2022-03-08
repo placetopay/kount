@@ -39,14 +39,10 @@ class InquiryRequest extends Request
 
             if (isset($payer['documentType']) && isset($payer['document'])) {
                 $requestData['UNIQ'] = $payer['documentType'] . $payer['document'];
-            } else {
-                $requestData['UNIQ'] = 'NA';
             }
 
             if (isset($payer['name'])) {
                 $requestData['NAME'] = $payer['name'] . (isset($payer['surname']) ? ' ' . $payer['surname'] : '');
-            } else {
-                $requestData['NAME'] = 'NA';
             }
 
             if (isset($payer['email'])) {
