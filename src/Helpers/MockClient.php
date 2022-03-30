@@ -165,6 +165,8 @@ class MockClient
             case 'DECLINE':
                 $response['AUTO'] = 'D';
                 break;
+            case 'EXCEPTION':
+                throw new \Exception('Testing purposes exception');
             default:
                 $response['AUTO'] = 'A';
                 break;
