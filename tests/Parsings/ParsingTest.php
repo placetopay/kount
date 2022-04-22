@@ -181,7 +181,7 @@ class ParsingTest extends BaseTestCase
                 'allowPartial' => false,
             ],
             // Card Related
-            'cardNumber' => '4111111111111111',
+            'cardNumber' => '36545400000008',
             // M match, N Not match, X unavailable
             'cvvStatus' => 'X',
             'cardExpiration' => '12/20',
@@ -215,7 +215,7 @@ class ParsingTest extends BaseTestCase
 
             'PTYP' => 'CARD',
             'LAST4' => substr($data['cardNumber'], -4),
-            'PTOK' => '411111XXXXXX1111',
+            'PTOK' => '365454XXXXXX0008',
             'CVVR' => $data['cvvStatus'],
             'CCMM' => '12',
             'CCYY' => '2020',
