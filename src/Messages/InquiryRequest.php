@@ -129,7 +129,7 @@ class InquiryRequest extends Request
         $number = trim($number);
 
         if (preg_match('/\d{14,19}/', $number)) {
-            $number = preg_replace('/(\d{6})\d+(\d{4})/', '$1' . str_repeat('X', strlen($number) - 10) . '$2', $number);
+            $number = preg_replace('/(\d{6})\d+(\d{4})/', '$1XXXXXX$2', $number);
         }
 
         return $number;
