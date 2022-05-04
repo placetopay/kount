@@ -85,7 +85,7 @@ class MockClient
         $response = [
             'VERS' => '0630',
             'MODE' => 'Q',
-            'TRAN' => $this->getData('TRAN'),
+            'TRAN' => time(),
             'MERC' => $this->getData('MERC'),
             'SESS' => $this->getData('SESS'),
             'ORDR' => $this->getData('ORDR'),
