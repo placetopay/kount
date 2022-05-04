@@ -16,6 +16,7 @@ class MockClient
      * @var RequestInterface
      */
     protected $request;
+    protected $lastResponse = [];
     protected $data;
 
     private function __construct()
@@ -33,6 +34,11 @@ class MockClient
     public function request()
     {
         return $this->request;
+    }
+
+    public function lastResponse(): array
+    {
+        return $this->lastResponse;
     }
 
     public function data()
@@ -75,6 +81,8 @@ class MockClient
         switch ($data['MODE'] ?? null) {
             case 'Q':
                 return $this->handleQuery();
+            case 'U':
+                return $this->handleUpdate();
             default:
                 return $this->response(400, 'Bad request');
         }
@@ -85,7 +93,7 @@ class MockClient
         $response = [
             'VERS' => '0630',
             'MODE' => 'Q',
-            'TRAN' => time(),
+            'TRAN' => 'KNZ50' . substr(time(), 0, 7),
             'MERC' => $this->getData('MERC'),
             'SESS' => $this->getData('SESS'),
             'ORDR' => $this->getData('ORDR'),
@@ -182,6 +190,8 @@ class MockClient
 
     private function parseResponse(array $response): string
     {
+        $this->lastResponse = $response;
+
         foreach ($response as $key => $value) {
             $response[$key] = $key . '=' . $value;
         }
@@ -194,5 +204,53 @@ class MockClient
         return new Client(['handler' => HandlerStack::create(
             self::instance()
         )]);
+    }
+
+    private function handleUpdate()
+    {
+        $response = [
+            'VERS' => '0630',
+            'MODE' => 'U',
+            'TRAN' => $this->getData('TRAN'),
+            'MERC' => $this->getData('MERC'),
+            'SESS' => $this->getData('SESS'),
+            'RULES_TRIGGERED' => '0',
+            'COUNTERS_TRIGGERED' => '0',
+            'REASON_CODE' => '',
+            'MASTERCARD' => '',
+            'DDFS' => '',
+            'DSR' => '',
+            'UAS' => '',
+            'BROWSER' => '',
+            'OS' => '',
+            'PIP_IPAD' => '',
+            'PIP_LAT' => '',
+            'PIP_LON' => '',
+            'PIP_COUNTRY' => '',
+            'PIP_REGION' => '',
+            'PIP_CITY' => '',
+            'PIP_ORG' => '',
+            'IP_IPAD' => '',
+            'IP_LAT' => '',
+            'IP_LON' => '',
+            'IP_COUNTRY' => '',
+            'IP_REGION' => '',
+            'IP_CITY' => '',
+            'IP_ORG' => '',
+            'WARNING_0' => '401 EXTRA_DATA in request. Please see RIS spec for valid fields, and ensure RIS input is URL encoded.',
+            'WARNING_COUNT' => '1',
+        ];
+
+        if ($this->getData('SESS') == 'AUTH_ERR') {
+            $response = [
+                'MODE' => 'E',
+                'ERRO' => '501',
+                'ERROR_0' => '501 UNAUTH_REQ',
+                'ERROR_COUNT' => '1',
+                'WARNING_COUNT' => '0',
+            ];
+        }
+
+        return $this->response(200, $this->parseResponse($response));
     }
 }
