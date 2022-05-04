@@ -154,3 +154,11 @@ return new KountService([
 ]);
 ```
 
+After this mock instance is loaded the available options to mock are this ones. Those are passed via `payment.reference`, meaning the reference on the transaction  
+
+* AUTH_ERR - Simulates a bad or expired ApiKey
+* REVIEW - Simulates a review response
+* DECLINE - Simulates a declination response
+* EXCEPTION - Simulates an internal exception
+
+Any other reference would return an approved response
