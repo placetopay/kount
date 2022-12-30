@@ -29,6 +29,7 @@ class ParsingTest extends BaseTestCase
                         'qty' => '1',
                         'price' => '2340',
                         'tax' => '300',
+                        'desc' => 'Item 1 description',
                     ],
                     [
                         'sku' => '234',
@@ -37,6 +38,7 @@ class ParsingTest extends BaseTestCase
                         'qty' => '2',
                         'price' => '543',
                         'tax' => '56',
+                        'desc' => 'Item 2 description',
                     ],
                 ],
                 'shipping' => [
@@ -90,10 +92,8 @@ class ParsingTest extends BaseTestCase
         $inquiryRequest = $service->parseInquiryRequest('123', $data);
 
         $requestData = [
-            'VERS' => '0630',
+            'VERS' => '0720',
             'MODE' => 'Q',
-            'SDK' => 'PHP',
-            'SDK_VERSION' => 'PlacetoPay-0.0.1',
 
             'MERC' => '201000',
             'SESS' => '123',
@@ -132,10 +132,12 @@ class ParsingTest extends BaseTestCase
 
             'UDF[KEY_1]' => $data['additional']['key_1'],
 
+            'PROD_DESC[0]' => $data['payment']['items'][0]['desc'],
             'PROD_TYPE[0]' => $data['payment']['items'][0]['sku'],
             'PROD_ITEM[0]' => $data['payment']['items'][0]['name'],
             'PROD_QUANT[0]' => $data['payment']['items'][0]['qty'],
             'PROD_PRICE[0]' => 234000,
+            'PROD_DESC[1]' => $data['payment']['items'][1]['desc'],
             'PROD_TYPE[1]' => $data['payment']['items'][1]['sku'],
             'PROD_ITEM[1]' => $data['payment']['items'][1]['name'],
             'PROD_QUANT[1]' => $data['payment']['items'][1]['qty'],
@@ -176,6 +178,7 @@ class ParsingTest extends BaseTestCase
                         'name' => 'Testing Required Product',
                         'price' => 134000,
                         'qty' => 1,
+                        'desc' => 'Item description',
                     ],
                 ],
                 'allowPartial' => false,
@@ -201,10 +204,8 @@ class ParsingTest extends BaseTestCase
         $inquiryRequest = $service->parseInquiryRequest(4, $data);
 
         $requestData = [
-            'VERS' => '0630',
+            'VERS' => '0720',
             'MODE' => 'Q',
-            'SDK' => 'PHP',
-            'SDK_VERSION' => 'PlacetoPay-0.0.1',
 
             'MACK' => 'Y',
             'MERC' => '201000',
@@ -226,6 +227,7 @@ class ParsingTest extends BaseTestCase
             'NAME' => $data['payer']['name'] . ' ' . $data['payer']['surname'],
             'EMAL' => $data['payer']['email'],
             'B2PN' => $data['payer']['mobile'],
+            'PROD_DESC[0]' => $data['payment']['items'][0]['desc'],
             'PROD_TYPE[0]' => $data['payment']['items'][0]['sku'],
             'PROD_ITEM[0]' => $data['payment']['items'][0]['name'],
             'PROD_QUANT[0]' => $data['payment']['items'][0]['qty'],
