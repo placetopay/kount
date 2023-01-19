@@ -2,12 +2,12 @@
 
 namespace PlacetoPay\Kount\Exceptions;
 
-use PlacetoPay\Kount\Messages\Response;
+use Exception;
 
-class KountServiceException extends \Exception
+class KountServiceException extends Exception
 {
-    public static function forErrorResponse(Response $response): self
+    public static function forErrorResponse(array $errors): self
     {
-        return new self(implode("\n", $response->errors()));
+        return new self(implode("\n", $errors));
     }
 }
