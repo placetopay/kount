@@ -59,7 +59,7 @@ class InquiryRequest extends Request
         $cardExpiration = explode('/', $this->data['cardExpiration']);
 
         $this->requestData = array_merge($this->requestData, [
-            'PTOK' => $this->maskNumber($this->data['cardNumber']),
+            'PTOK' => $this->maskCardNumber($this->data['cardNumber']),
             'LAST4' => substr($this->data['cardNumber'], -4),
             'PTYP' => 'CARD',
             'PENC' => 'MASK',
@@ -182,14 +182,14 @@ class InquiryRequest extends Request
         }
     }
 
-    private function maskNumber(string $number): string
+    private function maskCardNumber(string $number): ?string
     {
-        $number = trim($number);
-
-        if (preg_match('/\d{14,19}/', $number)) {
-            $number = preg_replace('/(\d{6})\d+(\d{4})/', '$1XXXXXX$2', $number);
+        if (preg_match('/^\d{13,19}$/', $number)) {
+            return substr($number, 0, 6) .
+                str_repeat('X', strlen($number) - 10) .
+                substr($number, -4);
         }
 
-        return $number;
+        return null;
     }
 }
