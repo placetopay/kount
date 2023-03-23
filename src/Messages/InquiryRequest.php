@@ -185,9 +185,8 @@ class InquiryRequest extends Request
     private function maskCardNumber(string $number): ?string
     {
         if (preg_match('/^\d{13,19}$/', $number)) {
-            return substr($number, 0, 6) .
-                str_repeat('X', strlen($number) - 10) .
-                substr($number, -4);
+            $repeats = strlen($number) - 10;
+            return substr($number, 0, 6) . str_repeat('X', $repeats > 4 ? $repeats : 5) . substr($number, -4);
         }
 
         return null;

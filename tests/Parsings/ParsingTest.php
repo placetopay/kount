@@ -216,7 +216,7 @@ class ParsingTest extends BaseTestCase
 
             'PTYP' => 'CARD',
             'LAST4' => substr($data['cardNumber'], -4),
-            'PTOK' => '365454XXXX0008',
+            'PTOK' => '365454XXXXX0008',
             'CVVR' => $data['cvvStatus'],
             'CCMM' => '12',
             'CCYY' => '2020',
