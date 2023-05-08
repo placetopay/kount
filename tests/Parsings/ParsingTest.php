@@ -2,24 +2,83 @@
 
 namespace Tests\Parsings;
 
+use PlacetoPay\Kount\KountService;
 use Tests\BaseTestCase;
 
 class ParsingTest extends BaseTestCase
 {
-    public function testItParsesTheInquiryRequestInformationCorrectly()
+    protected $service;
+
+    public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
-        $service = new \PlacetoPay\Kount\KountService([
+        parent::__construct($name, $data, $dataName);
+
+        $this->service = new KountService([
             'merchant' => '201000',
             'apiKey' => 'TESTING',
             'website' => 'DEFAULT',
         ]);
+    }
 
-        $data = [
+    public function basicRequestData(array $overrides = []): array
+    {
+        $data = \array_replace_recursive([
+            'mack' => 'Y',
             'payment' => [
-                'reference' => '1234',
+                'reference' => 'TEST_20170601_201117',
+                'description' => 'A numquam dolores et occaecati eum dolore.',
                 'amount' => [
                     'currency' => 'COP',
-                    'total' => '12300',
+                    'total' => 134000,
+                ],
+                'items' => [
+                    [
+                        'sku' => 1234,
+                        'name' => 'Testing Required Product',
+                        'price' => 134000,
+                        'qty' => 1,
+                        'desc' => 'Some kind of another name',
+                    ],
+                ],
+                'allowPartial' => false,
+            ],
+            // Card Related
+            'cardNumber' => '36545400000008',
+            // M match, N Not match, X unavailable
+            'cvvStatus' => 'X',
+            'cardExpiration' => '12/20',
+            // Person related
+            'payer' => [
+                'document' => '1040035000',
+                'documentType' => 'CC',
+                'name' => 'Stanton',
+                'surname' => 'Gerhold',
+                'email' => 'dcallem88@msn.com',
+                'mobile' => '3006108300',
+            ],
+            'ipAddress' => '127.0.0.1',
+            'userAgent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+        ], $overrides);
+
+        return $data;
+    }
+
+    public function testItParsesTheInquiryRequestInformationCorrectly()
+    {
+        $data = $this->basicRequestData([
+            'payer' => [
+                'address' => [
+                    'street' => 'Fake street 123',
+                    'city' => 'Medellin',
+                    'state' => 'Antioquia',
+                    'postalCode' => '050012',
+                    'country' => 'CO',
+                    'phone' => '4442310',
+                ],
+            ],
+            'payment' => [
+                'amount' => [
+                    'total' => 12300,
                 ],
                 'items' => [
                     [
@@ -55,41 +114,15 @@ class ParsingTest extends BaseTestCase
                     ],
                 ],
             ],
-            // Merchant Acknowledgement
-            'mack' => 'Y',
-            // Card Related
             'cardNumber' => '4111111111111111',
-            // M match, N Not match, X unavailable
-            'cvvStatus' => 'X',
-            'cardExpiration' => '12/20',
-            // Person related
-            'payer' => [
-                'name' => 'Diego',
-                'surname' => 'Calle',
-                'email' => 'dnetix@gmail.com',
-                'document' => '1040035000',
-                'documentType' => 'CC',
-                'address' => [
-                    'street' => 'Fake street 123',
-                    'city' => 'Medellin',
-                    'state' => 'Antioquia',
-                    'postalCode' => '050012',
-                    'country' => 'CO',
-                    'phone' => '4442310',
-                ],
-            ],
             'gender' => 'M',
-            // Additional
             'additional' => [
                 'key_1' => 'Some Value 1',
             ],
-            'ipAddress' => '127.0.0.1',
-            'userAgent' => 'Chrome XYZ',
-            // To organize
             'shipmentType' => \PlacetoPay\Kount\Messages\Request::SHIP_SAME,
-        ];
+        ]);
 
-        $inquiryRequest = $service->parseInquiryRequest('123', $data);
+        $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
 
         $requestData = [
             'VERS' => '0720',
@@ -157,51 +190,9 @@ class ParsingTest extends BaseTestCase
 
     public function testItParsesAShortRequest()
     {
-        $service = new \PlacetoPay\Kount\KountService([
-            'merchant' => '201000',
-            'apiKey' => 'TESTING',
-            'website' => 'DEFAULT',
-        ]);
+        $data = $this->basicRequestData();
 
-        $data = [
-            'mack' => 'Y',
-            'payment' => [
-                'reference' => 'TEST_20170601_201117',
-                'description' => 'A numquam dolores et occaecati eum dolore.',
-                'amount' => [
-                    'currency' => 'COP',
-                    'total' => 134000,
-                ],
-                'items' => [
-                    [
-                        'sku' => 1234,
-                        'name' => 'Testing Required Product',
-                        'price' => 134000,
-                        'qty' => 1,
-                        'desc' => 'Item description',
-                    ],
-                ],
-                'allowPartial' => false,
-            ],
-            // Card Related
-            'cardNumber' => '36545400000008',
-            // M match, N Not match, X unavailable
-            'cvvStatus' => 'X',
-            'cardExpiration' => '12/20',
-            // Person related
-            'payer' => [
-                'document' => '1040035000',
-                'documentType' => 'CC',
-                'name' => 'Stanton',
-                'surname' => 'Gerhold',
-                'email' => 'dcallem88@msn.com',
-                'mobile' => '3006108300',
-            ],
-            'ipAddress' => '127.0.0.1',
-            'userAgent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
-        ];
-
-        $inquiryRequest = $service->parseInquiryRequest(4, $data);
+        $inquiryRequest = $this->service->parseInquiryRequest(4, $data);
 
         $requestData = [
             'VERS' => '0720',
@@ -242,5 +233,35 @@ class ParsingTest extends BaseTestCase
         $this->assertEquals([
             'X-Kount-Api-Key' => 'TESTING',
         ], $inquiryRequest->asRequestHeaders(), 'Parses the inquiry headers correctly');
+    }
+
+    public function testItParsesCorrectlyAnotherAmounts()
+    {
+        $data = $this->basicRequestData(['payment' => [
+            'amount' => [
+                'total' => 1900,
+                'currency' => 'CLP',
+            ]],
+        ]);
+        $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
+        $this->assertEquals(1900, $inquiryRequest['TOTL']);
+
+        $data = $this->basicRequestData(['payment' => [
+            'amount' => [
+                'total' => 1900,
+                'currency' => 'JOD',
+            ]],
+        ]);
+        $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
+        $this->assertEquals(1900000, $inquiryRequest['TOTL']);
+
+        $data = $this->basicRequestData(['payment' => [
+            'amount' => [
+                'total' => 1900,
+                'currency' => 'COP',
+            ]],
+        ]);
+        $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
+        $this->assertEquals(190000, $inquiryRequest['TOTL']);
     }
 }

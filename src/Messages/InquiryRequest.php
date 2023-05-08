@@ -49,7 +49,7 @@ class InquiryRequest extends Request
 
     private function setPaymentInformation(): void
     {
-        $this->requestData['TOTL'] = $this->parseAmount($this->data['payment']['amount']['total']);
+        $this->requestData['TOTL'] = $this->parseAmount($this->data['payment']['amount']['total'], $this->data['payment']['amount']['currency']);
         $this->requestData['CURR'] = $this->data['payment']['amount']['currency'];
 
         if (!isset($this->data['cardNumber'])) {
@@ -143,7 +143,7 @@ class InquiryRequest extends Request
                 [
                     'PROD_DESC[' . $index . ']' => $item['desc'] ?? null,
                     'PROD_ITEM[' . $index . ']' => $item['name'] ?? null,
-                    'PROD_PRICE[' . $index . ']' => isset($item['price']) ? $this->parseAmount($item['price']) : null,
+                    'PROD_PRICE[' . $index . ']' => isset($item['price']) ? $this->parseAmount($item['price'], $this->data['payment']['amount']['currency']) : null,
                     'PROD_QUANT[' . $index . ']' => $item['qty'] ?? null,
                     'PROD_TYPE[' . $index . ']' => $item['sku'] ?? null,
                 ]
