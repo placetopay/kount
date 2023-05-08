@@ -28,7 +28,7 @@ class InquiryRequest extends Request
 
             'ORDR' => $this->data['payment']['reference'],
             'CURR' => $this->data['payment']['amount']['currency'],
-            'TOTL' => $this->parseAmount($this->data['payment']['amount']['total']),
+            'TOTL' => $this->parseAmount($this->data['payment']['amount']['total'], $this->data['payment']['amount']['currency']),
 
             'IPAD' => $this->data['ipAddress'],
             'UAGT' => $this->data['userAgent'],
@@ -116,7 +116,7 @@ class InquiryRequest extends Request
                     'PROD_TYPE[' . $index . ']' => isset($item['sku']) ? $item['sku'] : null,
                     'PROD_ITEM[' . $index . ']' => isset($item['name']) ? $item['name'] : null,
                     'PROD_QUANT[' . $index . ']' => isset($item['qty']) ? $item['qty'] : null,
-                    'PROD_PRICE[' . $index . ']' => isset($item['price']) ? $this->parseAmount($item['price']) : null,
+                    'PROD_PRICE[' . $index . ']' => isset($item['price']) ? $this->parseAmount($item['price'], $this->data['payment']['amount']['currency']) : null,
                 ]);
             }
         }
