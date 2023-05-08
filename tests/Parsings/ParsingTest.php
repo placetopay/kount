@@ -18,7 +18,6 @@ class ParsingTest extends BaseTestCase
             'apiKey' => 'TESTING',
             'website' => 'DEFAULT',
         ]);
-
     }
 
     public function basicRequestData(array $overrides = []): array
@@ -38,6 +37,7 @@ class ParsingTest extends BaseTestCase
                         'name' => 'Testing Required Product',
                         'price' => 134000,
                         'qty' => 1,
+                        'desc' => 'Some kind of another name',
                     ],
                 ],
                 'allowPartial' => false,
@@ -240,8 +240,8 @@ class ParsingTest extends BaseTestCase
         $data = $this->basicRequestData(['payment' => [
             'amount' => [
                 'total' => 1900,
-                'currency' => 'CLP'
-            ]]
+                'currency' => 'CLP',
+            ]],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(1900, $inquiryRequest['TOTL']);
@@ -249,8 +249,8 @@ class ParsingTest extends BaseTestCase
         $data = $this->basicRequestData(['payment' => [
             'amount' => [
                 'total' => 1900,
-                'currency' => 'JOD'
-            ]]
+                'currency' => 'JOD',
+            ]],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(1900000, $inquiryRequest['TOTL']);
@@ -258,8 +258,8 @@ class ParsingTest extends BaseTestCase
         $data = $this->basicRequestData(['payment' => [
             'amount' => [
                 'total' => 1900,
-                'currency' => 'COP'
-            ]]
+                'currency' => 'COP',
+            ]],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(190000, $inquiryRequest['TOTL']);
