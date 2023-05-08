@@ -6,12 +6,16 @@ abstract class Request
 {
     // Normal inquiry
     public const MODE_INQUIRY = 'Q';
+
     // Phone order inquiry
     public const MODE_PHONE_ORDER = 'P';
+
     // Kount Central normal inquiry with thresholds
     public const MODE_THRESHOLDS = 'W';
+
     // Kount Central thresholds-only inquiry
     public const MODE_THRESHOLDS_ONLY = 'J';
+
     // Update status with response
     public const MODE_UPDATE = 'U';
 
@@ -25,10 +29,13 @@ abstract class Request
 
     // Same day shipping
     public const SHIP_SAME = 'SD';
+
     // Next day shipping
     public const SHIP_NEXT = 'ND';
+
     // Second day shipping
     public const SHIP_SECOND = '2D';
+
     // Standard shipping
     public const SHIP_STANDARD = 'ST';
 
@@ -46,8 +53,6 @@ abstract class Request
 
     // Origin Obtained
     protected $version;
-    protected $sdk = 'PHP';
-    protected $sdkVersion;
     protected $apiToken;
     protected $merchant;
     protected $website;
@@ -55,57 +60,53 @@ abstract class Request
     protected $session;
     protected $data;
 
+    /**
+     * @return array
+     */
+    abstract public function asRequestData(): array;
+
     public function __construct($session, $data = [])
     {
         $this->session = $session;
         $this->data = $data;
     }
 
-    public function setMode($mode)
+    public function setMode($mode): self
     {
         $this->mode = $mode;
+
         return $this;
     }
 
-    public function setVersion($version)
+    public function setVersion($version): self
     {
         $this->version = $version;
+
         return $this;
     }
 
-    public function setApiToken($apiToken)
+    public function setApiToken($apiToken): self
     {
         $this->apiToken = $apiToken;
+
         return $this;
     }
 
-    public function setSdkVersion($sdkVersion)
-    {
-        $this->sdkVersion = $sdkVersion;
-        return $this;
-    }
-
-    public function setMerchant($merchant)
+    public function setMerchant($merchant): self
     {
         $this->merchant = $merchant;
+
         return $this;
     }
 
-    public function setWebsite($website)
+    public function setWebsite($website): self
     {
         $this->website = $website;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    abstract public function asRequestData();
-
-    /**
-     * @return array
-     */
-    public function asRequestHeaders()
+    public function asRequestHeaders(): array
     {
         return [
             'X-Kount-Api-Key' => $this->apiToken,

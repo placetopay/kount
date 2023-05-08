@@ -14,13 +14,11 @@ class UpdateRequest extends Request
     /**
      * @return array
      */
-    public function asRequestData()
+    public function asRequestData(): array
     {
         $requestData = [
             'VERS' => $this->version,
             'MODE' => $this->mode,
-            'SDK' => $this->sdk,
-            'SDK_VERSION' => $this->sdkVersion,
             'SITE' => $this->website,
 
             'MERC' => $this->merchant,

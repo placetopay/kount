@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [7.4]
+        php: [7.4, 8.0, 8.1]
 
     name: P${{ matrix.php }}
 
@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer install --no-interaction
+          composer update --no-interaction
           composer validate --no-check-all --strict
 
       - name: Execute tests
