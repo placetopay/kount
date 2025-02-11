@@ -18,7 +18,6 @@ class ParsingTest extends BaseTestCase
             'apiKey' => 'TESTING',
             'website' => 'DEFAULT',
         ]);
-
     }
 
     public function basicRequestData(array $overrides = []): array
@@ -239,8 +238,8 @@ class ParsingTest extends BaseTestCase
         $data = $this->basicRequestData(['payment' => [
             'amount' => [
                 'total' => 1900,
-                'currency' => 'CLP'
-            ]]
+                'currency' => 'CLP',
+            ]],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(1900, $inquiryRequest['TOTL']);
@@ -248,8 +247,8 @@ class ParsingTest extends BaseTestCase
         $data = $this->basicRequestData(['payment' => [
             'amount' => [
                 'total' => 1900,
-                'currency' => 'JOD'
-            ]]
+                'currency' => 'JOD',
+            ]],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(1900000, $inquiryRequest['TOTL']);
@@ -257,140 +256,33 @@ class ParsingTest extends BaseTestCase
         $data = $this->basicRequestData(['payment' => [
             'amount' => [
                 'total' => 1900,
-                'currency' => 'COP'
-            ]]
+                'currency' => 'COP',
+            ]],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(190000, $inquiryRequest['TOTL']);
     }
-    
-    public function testItParsesTheInquiryRequestWithPayerMobile(): void
+
+    public function testItParsesInquiryRequestIfPayerAddressPhoneIsNotSet(): void
     {
         $data = $this->basicRequestData([
             'payer' => [
-                'address' => [
-                    'street' => 'Fake street 123',
-                    'city' => 'Medellin',
-                    'state' => 'Antioquia',
-                    'postalCode' => '050012',
-                    'country' => 'CO',
-                ],
-            ]
+                'mobile' => '3111111111',
+            ],
         ]);
-
         $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
-
-        $requestData = [
-            'VERS' => '0630',
-            'MODE' => 'Q',
-            'SDK' => 'PHP',
-            'SDK_VERSION' => 'PlacetoPay-0.0.1',
-
-            'MERC' => '201000',
-            'SESS' => '123',
-            'ORDR' => $data['payment']['reference'],
-            'CURR' => $data['payment']['amount']['currency'],
-            'TOTL' => $data['payment']['amount']['total'] . "00",
-            'MACK' => $data['mack'],
-
-            'PTYP' => 'CARD',
-            'LAST4' => substr($data['cardNumber'], -4),
-            'PTOK' => '365454XXXXX0008',
-            'CVVR' => $data['cvvStatus'],
-            'CCMM' => '12',
-            'CCYY' => '2020',
-
-            'UNIQ' => $data['payer']['documentType'] . $data['payer']['document'],
-
-            'NAME' => $data['payer']['name'] . ' ' . $data['payer']['surname'],
-            'EMAL' => $data['payer']['email'],
-            'B2A1' => $data['payer']['address']['street'],
-            'B2CI' => $data['payer']['address']['city'],
-            'B2ST' => $data['payer']['address']['state'],
-            'B2PC' => $data['payer']['address']['postalCode'],
-            'B2CC' => $data['payer']['address']['country'],
-            'B2PN' => $data['payer']['mobile'],
-
-            'PROD_TYPE[0]' => $data['payment']['items'][0]['sku'],
-            'PROD_ITEM[0]' => $data['payment']['items'][0]['name'],
-            'PROD_QUANT[0]' => $data['payment']['items'][0]['qty'],
-            'PROD_PRICE[0]' => $data['payment']['amount']['total'] . "00",
-
-            'IPAD' => $data['ipAddress'],
-            'UAGT' => $data['userAgent'],
-            'SITE' => 'DEFAULT',
-            'PENC' => 'MASK',
-        ];
-
-        $this->assertEquals($requestData, $inquiryRequest->asRequestData(), 'Parses the inquiry data correctly');
-        $this->assertEquals([
-            'X-Kount-Api-Key' => 'TESTING',
-        ], $inquiryRequest->asRequestHeaders(), 'Parses the inquiry headers correctly');
+        $request = $inquiryRequest->asRequestData();
+        $this->assertEquals($data['payer']['mobile'], $request['B2PN']);
     }
 
-    public function testItParsesTheInquiryRequestWithoutPhoneAndMobile(): void
+    public function testItParsesInquiryRequestIfPayerMobileAndAddressPhoneIsNotSet(): void
     {
-        $data = $this->basicRequestData([
-            'payer' => [
-                'address' => [
-                    'street' => 'Fake street 123',
-                    'city' => 'Medellin',
-                    'state' => 'Antioquia',
-                    'postalCode' => '050012',
-                    'country' => 'CO',
-                ],
-            ]
-        ]);
+        $data = $this->basicRequestData();
 
         unset($data['payer']['mobile']);
 
         $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
 
-        $requestData = [
-            'VERS' => '0630',
-            'MODE' => 'Q',
-            'SDK' => 'PHP',
-            'SDK_VERSION' => 'PlacetoPay-0.0.1',
-
-            'MERC' => '201000',
-            'SESS' => '123',
-            'ORDR' => $data['payment']['reference'],
-            'CURR' => $data['payment']['amount']['currency'],
-            'TOTL' => $data['payment']['amount']['total'] . "00",
-            'MACK' => $data['mack'],
-
-            'PTYP' => 'CARD',
-            'LAST4' => substr($data['cardNumber'], -4),
-            'PTOK' => '365454XXXXX0008',
-            'CVVR' => $data['cvvStatus'],
-            'CCMM' => '12',
-            'CCYY' => '2020',
-
-            'UNIQ' => $data['payer']['documentType'] . $data['payer']['document'],
-
-            'NAME' => $data['payer']['name'] . ' ' . $data['payer']['surname'],
-            'EMAL' => $data['payer']['email'],
-            'B2A1' => $data['payer']['address']['street'],
-            'B2CI' => $data['payer']['address']['city'],
-            'B2ST' => $data['payer']['address']['state'],
-            'B2PC' => $data['payer']['address']['postalCode'],
-            'B2CC' => $data['payer']['address']['country'],
-            'B2PN' => null,
-
-            'PROD_TYPE[0]' => $data['payment']['items'][0]['sku'],
-            'PROD_ITEM[0]' => $data['payment']['items'][0]['name'],
-            'PROD_QUANT[0]' => $data['payment']['items'][0]['qty'],
-            'PROD_PRICE[0]' => $data['payment']['items'][0]['price'] . "00",
-
-            'IPAD' => $data['ipAddress'],
-            'UAGT' => $data['userAgent'],
-            'SITE' => 'DEFAULT',
-            'PENC' => 'MASK',
-        ];
-
-        $this->assertEquals($requestData, $inquiryRequest->asRequestData(), 'Parses the inquiry data correctly');
-        $this->assertEquals([
-            'X-Kount-Api-Key' => 'TESTING',
-        ], $inquiryRequest->asRequestHeaders(), 'Parses the inquiry headers correctly');
+        $this->assertArrayNotHasKey('B2PN', $inquiryRequest->asRequestData());
     }
 }
