@@ -264,7 +264,7 @@ class ParsingTest extends BaseTestCase
         $this->assertEquals(190000, $inquiryRequest['TOTL']);
     }
     
-    public function testItParsesTheInquiryRequestWithoutPhone(): void
+    public function testItParsesTheInquiryRequestWithPayerMobile(): void
     {
         $data = $this->basicRequestData([
             'payer' => [
@@ -275,49 +275,7 @@ class ParsingTest extends BaseTestCase
                     'postalCode' => '050012',
                     'country' => 'CO',
                 ],
-            ],
-            'payment' => [
-                'amount' => [
-                    'total' => 12300,
-                ],
-                'items' => [
-                    [
-                        'sku' => '111',
-                        'name' => 'TV Sony 32',
-                        'category' => 'physical',
-                        'qty' => '1',
-                        'price' => '2340',
-                        'tax' => '300',
-                    ],
-                    [
-                        'sku' => '234',
-                        'name' => 'Wireless Mouse',
-                        'category' => 'physical',
-                        'qty' => '2',
-                        'price' => '543',
-                        'tax' => '56',
-                    ],
-                ],
-                'shipping' => [
-                    'name' => 'Diego',
-                    'surname' => 'Calle',
-                    'email' => 'dnetix@gmail.com',
-                    'address' => [
-                        'street' => 'Fake street 321',
-                        'city' => 'Sabaneta',
-                        'state' => 'Antioquia',
-                        'postalCode' => '050013',
-                        'country' => 'CO',
-                        'phone' => '4442310',
-                    ],
-                ],
-            ],
-            'cardNumber' => '4111111111111111',
-            'gender' => 'M',
-            'additional' => [
-                'key_1' => 'Some Value 1',
-            ],
-            'shipmentType' => \PlacetoPay\Kount\Messages\Request::SHIP_SAME,
+            ]
         ]);
 
         $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
@@ -332,12 +290,12 @@ class ParsingTest extends BaseTestCase
             'SESS' => '123',
             'ORDR' => $data['payment']['reference'],
             'CURR' => $data['payment']['amount']['currency'],
-            'TOTL' => 1230000,
+            'TOTL' => $data['payment']['amount']['total'] . "00",
             'MACK' => $data['mack'],
 
             'PTYP' => 'CARD',
             'LAST4' => substr($data['cardNumber'], -4),
-            'PTOK' => '411111XXXXXX1111',
+            'PTOK' => '365454XXXXX0008',
             'CVVR' => $data['cvvStatus'],
             'CCMM' => '12',
             'CCYY' => '2020',
@@ -345,7 +303,6 @@ class ParsingTest extends BaseTestCase
             'UNIQ' => $data['payer']['documentType'] . $data['payer']['document'],
 
             'NAME' => $data['payer']['name'] . ' ' . $data['payer']['surname'],
-            'GENDER' => $data['gender'],
             'EMAL' => $data['payer']['email'],
             'B2A1' => $data['payer']['address']['street'],
             'B2CI' => $data['payer']['address']['city'],
@@ -354,25 +311,10 @@ class ParsingTest extends BaseTestCase
             'B2CC' => $data['payer']['address']['country'],
             'B2PN' => $data['payer']['mobile'],
 
-            'S2NM' => $data['payment']['shipping']['name'] . ' ' . $data['payment']['shipping']['surname'],
-            'S2EM' => $data['payment']['shipping']['email'],
-            'S2A1' => $data['payment']['shipping']['address']['street'],
-            'S2CI' => $data['payment']['shipping']['address']['city'],
-            'S2ST' => $data['payment']['shipping']['address']['state'],
-            'S2PC' => $data['payment']['shipping']['address']['postalCode'],
-            'S2CC' => $data['payment']['shipping']['address']['country'],
-            'S2PN' => $data['payment']['shipping']['address']['phone'],
-
-            'UDF[KEY_1]' => $data['additional']['key_1'],
-
             'PROD_TYPE[0]' => $data['payment']['items'][0]['sku'],
             'PROD_ITEM[0]' => $data['payment']['items'][0]['name'],
             'PROD_QUANT[0]' => $data['payment']['items'][0]['qty'],
-            'PROD_PRICE[0]' => 234000,
-            'PROD_TYPE[1]' => $data['payment']['items'][1]['sku'],
-            'PROD_ITEM[1]' => $data['payment']['items'][1]['name'],
-            'PROD_QUANT[1]' => $data['payment']['items'][1]['qty'],
-            'PROD_PRICE[1]' => 54300,
+            'PROD_PRICE[0]' => $data['payment']['amount']['total'] . "00",
 
             'IPAD' => $data['ipAddress'],
             'UAGT' => $data['userAgent'],
@@ -386,7 +328,7 @@ class ParsingTest extends BaseTestCase
         ], $inquiryRequest->asRequestHeaders(), 'Parses the inquiry headers correctly');
     }
 
-    public function testItParsesTheInquiryRequestWithoutPhoneOrMobile(): void
+    public function testItParsesTheInquiryRequestWithoutPhoneAndMobile(): void
     {
         $data = $this->basicRequestData([
             'payer' => [
@@ -397,49 +339,7 @@ class ParsingTest extends BaseTestCase
                     'postalCode' => '050012',
                     'country' => 'CO',
                 ],
-            ],
-            'payment' => [
-                'amount' => [
-                    'total' => 12300,
-                ],
-                'items' => [
-                    [
-                        'sku' => '111',
-                        'name' => 'TV Sony 32',
-                        'category' => 'physical',
-                        'qty' => '1',
-                        'price' => '2340',
-                        'tax' => '300',
-                    ],
-                    [
-                        'sku' => '234',
-                        'name' => 'Wireless Mouse',
-                        'category' => 'physical',
-                        'qty' => '2',
-                        'price' => '543',
-                        'tax' => '56',
-                    ],
-                ],
-                'shipping' => [
-                    'name' => 'Diego',
-                    'surname' => 'Calle',
-                    'email' => 'dnetix@gmail.com',
-                    'address' => [
-                        'street' => 'Fake street 321',
-                        'city' => 'Sabaneta',
-                        'state' => 'Antioquia',
-                        'postalCode' => '050013',
-                        'country' => 'CO',
-                        'phone' => '4442310',
-                    ],
-                ],
-            ],
-            'cardNumber' => '4111111111111111',
-            'gender' => 'M',
-            'additional' => [
-                'key_1' => 'Some Value 1',
-            ],
-            'shipmentType' => \PlacetoPay\Kount\Messages\Request::SHIP_SAME,
+            ]
         ]);
 
         unset($data['payer']['mobile']);
@@ -456,12 +356,12 @@ class ParsingTest extends BaseTestCase
             'SESS' => '123',
             'ORDR' => $data['payment']['reference'],
             'CURR' => $data['payment']['amount']['currency'],
-            'TOTL' => 1230000,
+            'TOTL' => $data['payment']['amount']['total'] . "00",
             'MACK' => $data['mack'],
 
             'PTYP' => 'CARD',
             'LAST4' => substr($data['cardNumber'], -4),
-            'PTOK' => '411111XXXXXX1111',
+            'PTOK' => '365454XXXXX0008',
             'CVVR' => $data['cvvStatus'],
             'CCMM' => '12',
             'CCYY' => '2020',
@@ -469,7 +369,6 @@ class ParsingTest extends BaseTestCase
             'UNIQ' => $data['payer']['documentType'] . $data['payer']['document'],
 
             'NAME' => $data['payer']['name'] . ' ' . $data['payer']['surname'],
-            'GENDER' => $data['gender'],
             'EMAL' => $data['payer']['email'],
             'B2A1' => $data['payer']['address']['street'],
             'B2CI' => $data['payer']['address']['city'],
@@ -478,25 +377,10 @@ class ParsingTest extends BaseTestCase
             'B2CC' => $data['payer']['address']['country'],
             'B2PN' => null,
 
-            'S2NM' => $data['payment']['shipping']['name'] . ' ' . $data['payment']['shipping']['surname'],
-            'S2EM' => $data['payment']['shipping']['email'],
-            'S2A1' => $data['payment']['shipping']['address']['street'],
-            'S2CI' => $data['payment']['shipping']['address']['city'],
-            'S2ST' => $data['payment']['shipping']['address']['state'],
-            'S2PC' => $data['payment']['shipping']['address']['postalCode'],
-            'S2CC' => $data['payment']['shipping']['address']['country'],
-            'S2PN' => $data['payment']['shipping']['address']['phone'],
-
-            'UDF[KEY_1]' => $data['additional']['key_1'],
-
             'PROD_TYPE[0]' => $data['payment']['items'][0]['sku'],
             'PROD_ITEM[0]' => $data['payment']['items'][0]['name'],
             'PROD_QUANT[0]' => $data['payment']['items'][0]['qty'],
-            'PROD_PRICE[0]' => 234000,
-            'PROD_TYPE[1]' => $data['payment']['items'][1]['sku'],
-            'PROD_ITEM[1]' => $data['payment']['items'][1]['name'],
-            'PROD_QUANT[1]' => $data['payment']['items'][1]['qty'],
-            'PROD_PRICE[1]' => 54300,
+            'PROD_PRICE[0]' => $data['payment']['items'][0]['price'] . "00",
 
             'IPAD' => $data['ipAddress'],
             'UAGT' => $data['userAgent'],
