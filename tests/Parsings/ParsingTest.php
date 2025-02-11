@@ -268,6 +268,13 @@ class ParsingTest extends BaseTestCase
         $data = $this->basicRequestData([
             'payer' => [
                 'mobile' => '3111111111',
+                'address' => [
+                    'street' => 'Fake street 123',
+                    'city' => 'Medellin',
+                    'state' => 'Antioquia',
+                    'postalCode' => '050012',
+                    'country' => 'CO',
+                ],
             ],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
