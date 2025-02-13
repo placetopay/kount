@@ -264,4 +264,33 @@ class ParsingTest extends BaseTestCase
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(190000, $inquiryRequest['TOTL']);
     }
+
+    public function testItParsesInquiryRequestIfPayerAddressPhoneIsNotSet(): void
+    {
+        $data = $this->basicRequestData([
+            'payer' => [
+                'mobile' => '3111111111',
+                'address' => [
+                    'street' => 'Fake street 123',
+                    'city' => 'Medellin',
+                    'state' => 'Antioquia',
+                    'postalCode' => '050012',
+                    'country' => 'CO',
+                ],
+            ],
+        ]);
+        $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
+        $this->assertEquals($data['payer']['mobile'], $inquiryRequest->asRequestData()['B2PN']);
+    }
+
+    public function testItParsesInquiryRequestIfPayerMobileAndAddressPhoneIsNotSet(): void
+    {
+        $data = $this->basicRequestData();
+
+        unset($data['payer']['mobile']);
+
+        $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
+
+        $this->assertArrayNotHasKey('B2PN', $inquiryRequest->asRequestData());
+    }
 }
