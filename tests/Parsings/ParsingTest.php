@@ -18,7 +18,6 @@ class ParsingTest extends BaseTestCase
             'apiKey' => 'TESTING',
             'website' => 'DEFAULT',
         ]);
-
     }
 
     public function basicRequestData(array $overrides = []): array
@@ -239,8 +238,8 @@ class ParsingTest extends BaseTestCase
         $data = $this->basicRequestData(['payment' => [
             'amount' => [
                 'total' => 1900,
-                'currency' => 'CLP'
-            ]]
+                'currency' => 'CLP',
+            ]],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(1900, $inquiryRequest['TOTL']);
@@ -248,8 +247,8 @@ class ParsingTest extends BaseTestCase
         $data = $this->basicRequestData(['payment' => [
             'amount' => [
                 'total' => 1900,
-                'currency' => 'JOD'
-            ]]
+                'currency' => 'JOD',
+            ]],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(1900000, $inquiryRequest['TOTL']);
@@ -257,10 +256,39 @@ class ParsingTest extends BaseTestCase
         $data = $this->basicRequestData(['payment' => [
             'amount' => [
                 'total' => 1900,
-                'currency' => 'COP'
-            ]]
+                'currency' => 'COP',
+            ]],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(190000, $inquiryRequest['TOTL']);
+    }
+
+    public function testItParsesInquiryRequestIfPayerAddressPhoneIsNotSet(): void
+    {
+        $data = $this->basicRequestData([
+            'payer' => [
+                'mobile' => '3111111111',
+                'address' => [
+                    'street' => 'Fake street 123',
+                    'city' => 'Medellin',
+                    'state' => 'Antioquia',
+                    'postalCode' => '050012',
+                    'country' => 'CO',
+                ],
+            ],
+        ]);
+        $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
+        $this->assertEquals($data['payer']['mobile'], $inquiryRequest->asRequestData()['B2PN']);
+    }
+
+    public function testItParsesInquiryRequestIfPayerMobileAndAddressPhoneIsNotSet(): void
+    {
+        $data = $this->basicRequestData();
+
+        unset($data['payer']['mobile']);
+
+        $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
+
+        $this->assertArrayNotHasKey('B2PN', $inquiryRequest->asRequestData());
     }
 }
