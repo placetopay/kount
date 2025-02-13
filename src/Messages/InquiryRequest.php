@@ -101,7 +101,7 @@ class InquiryRequest extends Request
                     'B2ST' => $address['state'] ?? null,
                     'B2PC' => $address['postalCode'] ?? null,
                     'B2CC' => $address['country'] ?? null,
-                    'B2PN' => $address['phone'] ?? null,
+                    'B2PN' => $address['phone'] ?? $payer['mobile'] ?? null,
                 ]
             );
         }
