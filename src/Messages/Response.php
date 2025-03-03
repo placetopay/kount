@@ -24,7 +24,7 @@ class Response
         return $this->raw;
     }
 
-    public function data(?string $key = null, ?string $default = null): ?string
+    public function data(?string $key = null, ?string $default = null)
     {
         if (is_null($key)) {
             return $this->data;
