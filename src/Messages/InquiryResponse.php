@@ -45,6 +45,24 @@ class InquiryResponse extends Response
         $this->warnings = new WarningsInformationExpert($this);
         $this->errors = new ErrorsInformationExpert($this);
     }
+    protected $rules = [];
+
+    public function rulesTriggered()
+    {
+        if (!$this->rules) {
+            $i = 0;
+            while ($rule = $this->data('RULE_ID_' . $i)) {
+                $this->rules[$rule] = $this->data('RULE_DESCRIPTION_' . $i);
+                $i++;
+            }
+        }
+        return $this->rules;
+    }
+
+    public function kountCode()
+    {
+        return $this->data('TRAN');
+    }
 
     public function score(): int
     {
@@ -55,7 +73,25 @@ class InquiryResponse extends Response
     {
         return (int)$this->data('OMNISCORE');
     }
+    public function shouldApprove(): bool
+    {
+        return $this->data('AUTO') == 'A';
+    }
 
+    public function shouldDecline(): bool
+    {
+        return $this->data('AUTO') == 'D';
+    }
+
+    public function shouldReview(): bool
+    {
+        return $this->data('AUTO') == 'R';
+    }
+
+    public function decision()
+    {
+        return $this->data('AUTO');
+    }
     public function toArray(): array
     {
         return [
