@@ -61,10 +61,8 @@ class InquiryResponse extends Response
         return (int)$this->data('SCOR');
     }
 
-    public function omniscore(): int
-    {
-        return (int)$this->data('OMNISCORE');
-    }
+    // Decision based
+
     public function shouldApprove(): bool
     {
         return $this->decision->shouldApprove();
@@ -168,6 +166,11 @@ class InquiryResponse extends Response
     public function hasCookies(): bool
     {
         return $this->transaction->hasCookies();
+    }
+
+    public function omniscore(): int
+    {
+        return (int)$this->data('OMNISCORE');
     }
 
     public function toArray(): array

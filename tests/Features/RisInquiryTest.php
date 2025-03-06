@@ -2,7 +2,6 @@
 
 namespace Tests\Features;
 
-use GuzzleHttp\Exception\GuzzleException;
 use PlacetoPay\Kount\Exceptions\KountServiceException;
 use PlacetoPay\Kount\Messages\Request;
 use PlacetoPay\Kount\Messages\Response;
@@ -10,10 +9,6 @@ use Tests\BaseTestCase;
 
 class RisInquiryTest extends BaseTestCase
 {
-    /**
-     * @throws GuzzleException
-     * @throws KountServiceException
-     */
     public function basicRequest(string $session, array $overrides = []): Response
     {
         $request = array_replace_recursive([
@@ -95,7 +90,6 @@ class RisInquiryTest extends BaseTestCase
 
     /**
      * @test
-     * @throws GuzzleException
      */
     public function it_handles_a_basic_error()
     {

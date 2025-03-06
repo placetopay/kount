@@ -86,7 +86,7 @@ class MockClient
             case 'U':
                 return $this->handleUpdate();
             default:
-                return $this->response('400', 'Bad request');
+                return $this->response(400, 'Bad request');
         }
     }
 

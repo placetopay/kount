@@ -47,6 +47,13 @@ class InquiryResponseTest extends BaseTestCase
         $this->assertNull($response->errors->key());
         $this->assertEquals(0, $response->errors->count());
         $this->assertEmpty($response->errors->errors());
+
+        $this->assertFalse($response->errors->isErrorResponse());
+        $this->assertFalse($response->isErrorResponse());
+        $this->assertNull($response->errorCode());
+        $this->assertNull($response->errorKey());
+        $this->assertEquals(0, $response->errorCount());
+        $this->assertEmpty($response->errors());
     }
 
     public function testItParsesASuccesfulInquiryWithDeclinedDecision()
@@ -59,6 +66,12 @@ class InquiryResponseTest extends BaseTestCase
         $this->assertNull($response->errors->key());
         $this->assertEquals(0, $response->errors->count());
         $this->assertEmpty($response->errors->errors());
+
+        $this->assertFalse($response->isErrorResponse());
+        $this->assertNull($response->errorCode());
+        $this->assertNull($response->errorKey());
+        $this->assertEquals(0, $response->errorCount());
+        $this->assertEmpty($response->errors());
     }
 
     /**
@@ -140,10 +153,14 @@ class InquiryResponseTest extends BaseTestCase
         $response = new InquiryResponse($result);
 
         $this->assertEquals(DecisionCodes::DECLINE, $response->decision->code());
+        $this->assertEquals(DecisionCodes::DECLINE, $response->decision());
         $this->assertEquals(DecisionReasons::DECLINE, $response->decision->description());
         $this->assertFalse($response->decision->shouldApprove());
         $this->assertTrue($response->decision->shouldDecline());
         $this->assertFalse($response->decision->shouldReview());
+        $this->assertFalse($response->shouldApprove());
+        $this->assertTrue($response->shouldDecline());
+        $this->assertFalse($response->shouldReview());
         $this->assertEquals([
             'code' => DecisionCodes::DECLINE,
             'description' => DecisionReasons::DECLINE,

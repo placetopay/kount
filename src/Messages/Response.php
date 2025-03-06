@@ -12,9 +12,7 @@ class Response
     public function __construct(string $response)
     {
         $this->raw = $response;
-
         $lines = preg_split('/[\r\n]+/', $response, -1, PREG_SPLIT_NO_EMPTY);
-
         foreach ($lines as $line) {
             list($key, $value) = explode('=', $line, 2);
             $this->data[$key] = $value;
@@ -26,17 +24,15 @@ class Response
         return $this->raw;
     }
 
-    public function data(?string $key = null, ?string $default = null)
+    public function data($key = null, $default = null)
     {
-        if (is_null($key)) {
-            return $this->data;
+        if ($key) {
+            if (isset($this->data[$key])) {
+                return $this->data[$key];
+            }
+            return $default;
         }
-
-        if (isset($this->data[$key])) {
-            return $this->data[$key];
-        }
-
-        return $default;
+        return $this->data;
     }
 
     // Error related

@@ -3,6 +3,7 @@
 namespace Tests\Parsings;
 
 use PlacetoPay\Kount\KountService;
+use PlacetoPay\Kount\Messages\Request;
 use Tests\BaseTestCase;
 
 class ParsingTest extends BaseTestCase
@@ -119,7 +120,7 @@ class ParsingTest extends BaseTestCase
             'additional' => [
                 'key_1' => 'Some Value 1',
             ],
-            'shipmentType' => \PlacetoPay\Kount\Messages\Request::SHIP_SAME,
+            'shipmentType' => Request::SHIP_SAME,
         ]);
 
         $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
