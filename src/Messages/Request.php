@@ -60,9 +60,6 @@ abstract class Request
     protected $session;
     protected $data;
 
-    /**
-     * @return array
-     */
     abstract public function asRequestData(): array;
 
     public function __construct($session, $data = [])

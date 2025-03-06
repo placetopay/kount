@@ -2,6 +2,8 @@
 
 namespace PlacetoPay\Kount\Messages;
 
+use PlacetoPay\Kount\Entities\KountError;
+
 class Response
 {
     protected $raw;
@@ -35,5 +37,64 @@ class Response
         }
 
         return $default;
+    }
+
+    // Error related
+
+    public function isErrorResponse(): bool
+    {
+        return $this->data('MODE') === 'E';
+    }
+
+    public function errorCount(): int
+    {
+        return (int)$this->data('ERROR_COUNT');
+    }
+
+    public function errorCode()
+    {
+        return $this->data('ERRO');
+    }
+
+    /**
+     * Returns the KEY error that can be translated into an message.
+     * @return string
+     */
+    public function errorKey()
+    {
+        if ($this->errorCode()) {
+            return KountError::errorKey($this->errorCode());
+        }
+        return null;
+    }
+
+    public function errors(): array
+    {
+        $messages = [];
+        if ($this->isErrorResponse()) {
+            if ($this->errorCount()) {
+                for ($i = 0; $i < $this->data('ERROR_COUNT', 0); $i++) {
+                    $messages[] = $this->data('ERROR_' . $i);
+                }
+            } else {
+                $messages[] = $this->errorKey();
+            }
+        }
+        return $messages;
+    }
+
+    public function merchant()
+    {
+        return $this->data('MERC');
+    }
+
+    public function session()
+    {
+        return $this->data('SESS');
+    }
+
+    public function order()
+    {
+        return $this->data('ORDR');
     }
 }

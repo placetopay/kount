@@ -40,7 +40,7 @@ class MockClient
         return $this->lastResponse;
     }
 
-    public function data(): mixed
+    public function data()
     {
         return $this->data;
     }

@@ -80,9 +80,94 @@ class InquiryResponse extends Response
         return $this->decision->shouldReview();
     }
 
-    public function decision()
+    public function decision(): ?string
     {
         return $this->decision->code();
+    }
+
+    public function deviceLayers(): ?string
+    {
+        return $this->transaction->deviceLayers();
+    }
+
+    public function userAgent(): string
+    {
+        return $this->additional->userAgent();
+    }
+
+    public function operativeSystem(): string
+    {
+        return $this->additional->operativeSystem();
+    }
+
+    public function screenResolution(): string
+    {
+        return $this->additional->screenResolution();
+    }
+
+    public function ipAddress(): ?string
+    {
+        return $this->ip->address();
+    }
+
+    public function ipLatitude(): ?string
+    {
+        return $this->ip->latitude();
+    }
+
+    public function ipLongitude(): ?string
+    {
+        return $this->ip->longitude();
+    }
+
+    public function ipCountry(): ?string
+    {
+        return $this->ip->country();
+    }
+
+    public function ipState(): ?string
+    {
+        return $this->ip->state();
+    }
+
+    public function ipCity(): ?string
+    {
+        return $this->ip->city();
+    }
+
+    public function ipProvider(): ?string
+    {
+        return $this->ip->provider();
+    }
+
+    public function fingerprint(): ?string
+    {
+        return $this->transaction->fingerprint();
+    }
+
+    public function language(): ?string
+    {
+        return $this->transaction->language();
+    }
+
+    public function hasProxy(): bool
+    {
+        return $this->transaction->hasProxy();
+    }
+
+    public function hasJavascript(): bool
+    {
+        return $this->transaction->hasJavascript();
+    }
+
+    public function hasFlash(): bool
+    {
+        return $this->transaction->hasFlash();
+    }
+
+    public function hasCookies(): bool
+    {
+        return $this->transaction->hasCookies();
     }
 
     public function toArray(): array

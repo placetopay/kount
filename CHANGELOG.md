@@ -6,18 +6,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 - Add support Kount 0720 version 
-
-## [2.0.4]
-- Fix B2PN value on InquiryRequest
-
-## [2.0.2]
-- Really fix maskCardNumber
-
-## [2.0.1]
-- Fix maskCardNumber
-
-## [2.0.0]
-
-### Changed
-- Update to 0720 version adding new information groups for InquiryResponse including missing fields [Pull Request](https://github.com/placetopay/kount/pull/9)
-
