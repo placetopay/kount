@@ -2,8 +2,7 @@
 
 namespace PlacetoPay\Kount\Messages\InquiryResponseInformationExperts;
 
-use PlacetoPay\Kount\Constants\DecisionCodes;
-use PlacetoPay\Kount\Constants\DecisionReasons;
+use PlacetoPay\Kount\Constants\Decisions;
 use PlacetoPay\Kount\Contracts\InquiryResponseInformationExpert;
 
 class DecisionInformationExpert extends InquiryResponseInformationExpert
@@ -15,22 +14,22 @@ class DecisionInformationExpert extends InquiryResponseInformationExpert
 
     public function description(): ?string
     {
-        return DecisionReasons::REASONS[$this->code()] ?: DecisionReasons::ERROR;
+        return Decisions::REASONS[$this->code()] ?: Decisions::ERROR_REASON;
     }
 
     public function shouldApprove(): bool
     {
-        return $this->code() === DecisionCodes::APPROVE;
+        return $this->code() === Decisions::APPROVE;
     }
 
     public function shouldDecline(): bool
     {
-        return $this->code() === DecisionCodes::DECLINE;
+        return $this->code() === Decisions::DECLINE;
     }
 
     public function shouldReview(): bool
     {
-        return $this->code() === DecisionCodes::REVIEW;
+        return $this->code() === Decisions::REVIEW;
     }
 
     public function toArray(): array

@@ -36,7 +36,7 @@ class KountService
      */
     public function __construct($settings)
     {
-        $this->validateMandatoryData($settings);
+        $this->validate($settings);
 
         $this->apiKey = $settings['apiKey'];
         $this->merchant = $settings['merchant'];
@@ -52,7 +52,7 @@ class KountService
     /**
      * @throws KountServiceException
      */
-    private function validateMandatoryData($settings): void
+    private function validate($settings): void
     {
         if (!isset($settings['apiKey']) || !isset($settings['merchant']) || !isset($settings['website'])) {
             throw new KountServiceException('Values for apiKey, website or merchant has to be provided');

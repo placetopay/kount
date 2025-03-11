@@ -61,8 +61,6 @@ class InquiryResponse extends Response
         return (int)$this->data('SCOR');
     }
 
-    // Decision based
-
     public function shouldApprove(): bool
     {
         return $this->decision->shouldApprove();

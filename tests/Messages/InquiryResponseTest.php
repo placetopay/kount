@@ -2,8 +2,7 @@
 
 namespace Tests\Messages;
 
-use PlacetoPay\Kount\Constants\DecisionCodes;
-use PlacetoPay\Kount\Constants\DecisionReasons;
+use PlacetoPay\Kount\Constants\Decisions;
 use PlacetoPay\Kount\Entities\KountError;
 use PlacetoPay\Kount\Exceptions\KountServiceException;
 use PlacetoPay\Kount\Messages\InquiryResponse;
@@ -152,9 +151,9 @@ class InquiryResponseTest extends BaseTestCase
         $result = $this->unserialize('czoxNTI4OiJWRVJTPTA3MjAKTU9ERT1RClRSQU49UDAxSjBLWk4zMjlaCk1FUkM9MjAxMDAwClNFU1M9MwpPUkRSPTEyMzQKQVVUTz1EClNDT1I9MzMKT01OSVNDT1JFPTY3CkdFT1g9VVMKQlJORD1WSVNBClJFR049Ck5FVFc9QQpLQVBUPVkKQ0FSRFM9MQpERVZJQ0VTPTEKRU1BSUxTPTEKVkVMTz0wClZNQVg9MApTSVRFPURFRkFVTFQKREVWSUNFX0xBWUVSUz04MUJCRjc3NzBDLi5EOTI5MDlGRjkyLjE4NjdBOUIyQ0IuRDYxMTJDMDlGNwpGSU5HRVJQUklOVD00QzI0MTBCQTIyQTY0RTIxQkYwQzczRUE4OEU0OEQ3RQpUSU1FWk9ORT0zMDAKTE9DQUxUSU1FPTIwMTctMDUtMzEgMDA6MTkKUkVHSU9OPUNPXzAyCkNPVU5UUlk9Q08KUFJPWFk9TgpKQVZBU0NSSVBUPVkKRkxBU0g9TgpDT09LSUVTPVkKSFRUUF9DT1VOVFJZPVVTCkxBTkdVQUdFPUVOCk1PQklMRV9ERVZJQ0U9TgpNT0JJTEVfVFlQRT0KTU9CSUxFX0ZPUldBUkRFUj1OClZPSUNFX0RFVklDRT1OClBDX1JFTU9URT1OClJVTEVTX1RSSUdHRVJFRD01ClJVTEVfSURfMD03Mjk4MzIKUlVMRV9ERVNDUklQVElPTl8wPUJpbGxpbmcgQ291bnRyeSBpcyBub3QgQklOIENvdW50cnkKUlVMRV9JRF8xPTcyOTg1MgpSVUxFX0RFU0NSSVBUSU9OXzE9RGVjbGluZSBOZXR3b3JrIENoYXJnZWJhY2tzID4xClJVTEVfSURfMj03Mjk4NTQKUlVMRV9ERVNDUklQVElPTl8yPVJldmlldyBOb24tTm9ybWFsIE5ldHdvcmsgVHlwZQpSVUxFX0lEXzM9NzI5ODU4ClJVTEVfREVTQ1JJUFRJT05fMz1EZXZpY2UgTG9jYXRpb24gTG93ZXIgUmlzayBSZXZpZXcgQ291bnRyaWVzClJVTEVfSURfND03Mjk4NzIKUlVMRV9ERVNDUklQVElPTl80PUNhcmQgb24gTmV0d29yayBDaGFyZ2ViYWNrIExpc3QgPjAKQ09VTlRFUlNfVFJJR0dFUkVEPTIKQ09VTlRFUl9OQU1FXzA9Q09OVFJBQ0FSR09TUkVQT1JUQURPUwpDT1VOVEVSX1ZBTFVFXzA9MSwKQ09VTlRFUl9OQU1FXzE9SElTVE9SSUNPTkVHQVRJVk8KQ09VTlRFUl9WQUxVRV8xPTEKUkVBU09OX0NPREU9Ck1BU1RFUkNBUkQ9CkRERlM9MjAxNy0wNS0zMApEU1I9NzY4eDEzNjYKVUFTPU1vemlsbGEvNS4wIChYMTE7IExpbnV4IHg4Nl82NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU4LjAuMzAyOS4xMTAgU2FmYXJpLzUzNy4zNgpCUk9XU0VSPUNocm9tZSA1OC4wLjMwMjkuMTEwCk9TPUxpbnV4ClBJUF9JUEFEPQpQSVBfTEFUPQpQSVBfTE9OPQpQSVBfQ09VTlRSWT0KUElQX1JFR0lPTj0KUElQX0NJVFk9ClBJUF9PUkc9CklQX0lQQUQ9MTgxLjEyOC44NS4yMjEKSVBfTEFUPTYuMjUxOApJUF9MT049LTc1LjU2MzYKSVBfQ09VTlRSWT1DTwpJUF9SRUdJT049QW50aW9xdWlhCklQX0NJVFk9TWVkZWxsw61uCklQX09SRz1VTkUKVEhSRUVfRFNfTUVSQ0hBTlRfUkVTUE9OU0U9CldBUk5JTkdfQ09VTlQ9MgpXQVJOSU5HXzA9VEhJUyBJUyBUSEUgRklSU1QgV0FSTklORwpXQVJOSU5HXzE9VEhJUyBJUyBUSEUgU0VDT05EIFdBUk5JTkcKUFJFVklPVVNMWV9XSElURUxJU1RFRD1OIjs=');
         $response = new InquiryResponse($result);
 
-        $this->assertEquals(DecisionCodes::DECLINE, $response->decision->code());
-        $this->assertEquals(DecisionCodes::DECLINE, $response->decision());
-        $this->assertEquals(DecisionReasons::DECLINE, $response->decision->description());
+        $this->assertEquals(Decisions::DECLINE, $response->decision->code());
+        $this->assertEquals(Decisions::DECLINE, $response->decision());
+        $this->assertEquals(Decisions::DECLINE_REASON, $response->decision->description());
         $this->assertFalse($response->decision->shouldApprove());
         $this->assertTrue($response->decision->shouldDecline());
         $this->assertFalse($response->decision->shouldReview());
@@ -162,8 +161,8 @@ class InquiryResponseTest extends BaseTestCase
         $this->assertTrue($response->shouldDecline());
         $this->assertFalse($response->shouldReview());
         $this->assertEquals([
-            'code' => DecisionCodes::DECLINE,
-            'description' => DecisionReasons::DECLINE,
+            'code' => Decisions::DECLINE,
+            'description' => Decisions::DECLINE_REASON,
             'shouldApprove' => false,
             'shouldDecline' => true,
             'shouldReview' => false,
@@ -395,8 +394,8 @@ class InquiryResponseTest extends BaseTestCase
                 'orderReference' => '1234',
             ],
             'decision' => [
-                'code' => DecisionCodes::DECLINE,
-                'description' => DecisionReasons::DECLINE,
+                'code' => Decisions::DECLINE,
+                'description' => Decisions::DECLINE_REASON,
                 'shouldApprove' => false,
                 'shouldDecline' => true,
                 'shouldReview' => false,
