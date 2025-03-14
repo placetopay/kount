@@ -46,12 +46,12 @@ class InquiryResponse extends Response
         $this->errors = new ErrorsInformationExpert($this);
     }
 
-    public function rulesTriggered()
+    public function rulesTriggered(): array
     {
         return $this->triggeredRules->rules();
     }
 
-    public function kountCode()
+    public function kountCode(): ?string
     {
         return $this->transaction->id();
     }
