@@ -74,8 +74,8 @@ $data = [
             ]
         ],
         'shipping' => [
-            'name' => 'Diego',
-            'surname' => 'Calle',
+            'name' => 'John',
+            'surname' => 'Doue',
             'email' => 'fake@email.com',
             'address' => [
                 'street' => 'Fake street 321',
@@ -97,9 +97,9 @@ $data = [
     'cardExpiration' => '12/20',
     // Person related
     'payer' => [
-        'name' => 'Diego',
-        'surname' => 'Calle',
-        'email' => 'dnetix@gmail.com',
+        'name' => 'John',
+        'surname' => 'Doe',
+        'email' => 'fake@email.com',
         'document' => '1040035000',
         'documentType' => 'CC',
         'address' => [
