@@ -110,6 +110,7 @@ $rules = [
     'short_scalar_cast' => true,
     'no_unset_cast' => true,
     'no_trailing_comma_in_singleline_array' => true,
+    'blank_lines_before_namespace' => true,
 ];
 
 $finder = Finder::create()
