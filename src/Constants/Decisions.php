@@ -3,7 +3,8 @@
 namespace PlacetoPay\Kount\Constants;
 
 class Decisions
-{  public const APPROVE = 'A';
+{
+    public const APPROVE = 'A';
     public const DECLINE = 'D';
     public const REVIEW = 'R';
     public const ERROR = 'E';
