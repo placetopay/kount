@@ -3,16 +3,13 @@
 namespace PlacetoPay\Kount\Messages;
 
 use PlacetoPay\Kount\Entities\KountError;
-use PlacetoPay\Kount\Exceptions\KountServiceException;
 
 class Response
 {
     protected $raw;
     protected $data;
 
-    protected $errors = [];
-
-    public function __construct($response)
+    public function __construct(string $response)
     {
         $this->raw = $response;
         $lines = preg_split('/[\r\n]+/', $response, -1, PREG_SPLIT_NO_EMPTY);
@@ -20,13 +17,9 @@ class Response
             list($key, $value) = explode('=', $line, 2);
             $this->data[$key] = $value;
         }
-
-        if ($this->data('MODE') == 'E') {
-            throw KountServiceException::forErrorResponse($this);
-        }
     }
 
-    public function raw()
+    public function raw(): string
     {
         return $this->raw;
     }

@@ -137,7 +137,7 @@ class KountError
     public static function errorKey($code = null)
     {
         if ($code) {
-            return isset(self::$ERRORS_CODES[$code]) ? self::$ERRORS_CODES[$code] : null;
+            return self::$ERRORS_CODES[$code] ?? null;
         }
         return self::$ERRORS_CODES;
     }
@@ -145,7 +145,7 @@ class KountError
     public static function errorMessage($key = null)
     {
         if ($key) {
-            return isset(self::$EN[$key]) ? self::$EN[$key] : null;
+            return self::$EN[$key] ?? null;
         }
         return self::$EN;
     }

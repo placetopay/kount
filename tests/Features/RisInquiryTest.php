@@ -3,6 +3,7 @@
 namespace Tests\Features;
 
 use PlacetoPay\Kount\Exceptions\KountServiceException;
+use PlacetoPay\Kount\Messages\Request;
 use PlacetoPay\Kount\Messages\Response;
 use Tests\BaseTestCase;
 
@@ -81,7 +82,7 @@ class RisInquiryTest extends BaseTestCase
             'ipAddress' => '127.0.0.1',
             'userAgent' => 'Chrome XYZ',
             // To organize
-            'shipmentType' => \PlacetoPay\Kount\Messages\Request::SHIP_SAME,
+            'shipmentType' => Request::SHIP_SAME,
         ], $overrides);
 
         return $this->service()->inquiry($session, $request);

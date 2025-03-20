@@ -46,8 +46,6 @@ abstract class Request
 
     // Origin Obtained
     protected $version;
-    protected $sdk = 'PHP';
-    protected $sdkVersion;
     protected $apiToken;
     protected $merchant;
     protected $website;
@@ -55,57 +53,45 @@ abstract class Request
     protected $session;
     protected $data;
 
+    abstract public function asRequestData(): array;
+
     public function __construct($session, $data = [])
     {
         $this->session = $session;
         $this->data = $data;
     }
 
-    public function setMode($mode)
+    public function setMode($mode): self
     {
         $this->mode = $mode;
         return $this;
     }
 
-    public function setVersion($version)
+    public function setVersion($version): self
     {
         $this->version = $version;
         return $this;
     }
 
-    public function setApiToken($apiToken)
+    public function setApiToken($apiToken): self
     {
         $this->apiToken = $apiToken;
         return $this;
     }
 
-    public function setSdkVersion($sdkVersion)
-    {
-        $this->sdkVersion = $sdkVersion;
-        return $this;
-    }
-
-    public function setMerchant($merchant)
+    public function setMerchant($merchant): self
     {
         $this->merchant = $merchant;
         return $this;
     }
 
-    public function setWebsite($website)
+    public function setWebsite($website): self
     {
         $this->website = $website;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    abstract public function asRequestData();
-
-    /**
-     * @return array
-     */
-    public function asRequestHeaders()
+    public function asRequestHeaders(): array
     {
         return [
             'X-Kount-Api-Key' => $this->apiToken,
