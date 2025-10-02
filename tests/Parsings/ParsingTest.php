@@ -142,9 +142,9 @@ class ParsingTest extends BaseTestCase
             'CCMM' => '12',
             'CCYY' => '2020',
 
-            'UNIQ' => $data['payer']['documentType'].$data['payer']['document'],
+            'UNIQ' => $data['payer']['documentType'] . $data['payer']['document'],
 
-            'NAME' => $data['payer']['name'].' '.$data['payer']['surname'],
+            'NAME' => $data['payer']['name'] . ' ' . $data['payer']['surname'],
             'GENDER' => $data['gender'],
             'EMAL' => $data['payer']['email'],
             'B2A1' => $data['payer']['address']['street'],
@@ -154,7 +154,7 @@ class ParsingTest extends BaseTestCase
             'B2CC' => $data['payer']['address']['country'],
             'B2PN' => $data['payer']['address']['phone'],
 
-            'S2NM' => $data['payment']['shipping']['name'].' '.$data['payment']['shipping']['surname'],
+            'S2NM' => $data['payment']['shipping']['name'] . ' ' . $data['payment']['shipping']['surname'],
             'S2EM' => $data['payment']['shipping']['email'],
             'S2A1' => $data['payment']['shipping']['address']['street'],
             'S2CI' => $data['payment']['shipping']['address']['city'],
@@ -213,9 +213,9 @@ class ParsingTest extends BaseTestCase
             'CCYY' => '2020',
             'PENC' => 'MASK',
 
-            'UNIQ' => $data['payer']['documentType'].$data['payer']['document'],
+            'UNIQ' => $data['payer']['documentType'] . $data['payer']['document'],
 
-            'NAME' => $data['payer']['name'].' '.$data['payer']['surname'],
+            'NAME' => $data['payer']['name'] . ' ' . $data['payer']['surname'],
             'EMAL' => $data['payer']['email'],
             'B2PN' => $data['payer']['mobile'],
             'PROD_DESC[0]' => $data['payment']['items'][0]['desc'],
@@ -242,7 +242,7 @@ class ParsingTest extends BaseTestCase
                 'amount' => [
                     'total' => 1900,
                     'currency' => 'CLP',
-                ]
+                ],
             ],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
@@ -253,7 +253,7 @@ class ParsingTest extends BaseTestCase
                 'amount' => [
                     'total' => 1900,
                     'currency' => 'JOD',
-                ]
+                ],
             ],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
@@ -264,7 +264,7 @@ class ParsingTest extends BaseTestCase
                 'amount' => [
                     'total' => 1900,
                     'currency' => 'COP',
-                ]
+                ],
             ],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
