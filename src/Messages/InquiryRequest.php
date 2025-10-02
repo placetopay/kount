@@ -2,6 +2,8 @@
 
 namespace PlacetoPay\Kount\Messages;
 
+use PlacetoPay\Kount\Constants\SupportedInstruments;
+
 class InquiryRequest extends Request
 {
     private $requestData = [];
@@ -47,28 +49,57 @@ class InquiryRequest extends Request
         }
     }
 
-    private function setPaymentInformation(): void
+    private function getCardData(array $data): array
     {
-        $this->requestData['TOTL'] = $this->parseAmount($this->data['payment']['amount']['total'], $this->data['payment']['amount']['currency']);
-        $this->requestData['CURR'] = $this->data['payment']['amount']['currency'];
-
-        if (!isset($this->data['cardNumber'])) {
-            return;
-        }
-
-        $cardExpiration = explode('/', $this->data['cardExpiration']);
-
-        $this->requestData = array_merge($this->requestData, [
-            'PTOK' => $this->maskCardNumber($this->data['cardNumber']),
-            'LAST4' => substr($this->data['cardNumber'], -4),
+        $cardExpiration = explode('/', $data['cardExpiration']);
+        $cardData = [
+            'PTOK' => $this->maskCardNumber($data['cardNumber']),
+            'LAST4' => substr($data['cardNumber'], -4),
             'PTYP' => 'CARD',
             'PENC' => 'MASK',
             'CCMM' => $cardExpiration[0],
             'CCYY' => '20' . $cardExpiration[1],
-        ]);
+        ];
 
-        if (isset($this->data['cvvStatus'])) {
-            $this->requestData['CVVR'] = $this->data['cvvStatus'];
+        if (isset($data['cvvStatus'])) {
+            $cardData['CVVR'] = $data['cvvStatus'];
+        }
+
+        return $cardData;
+    }
+
+    private function setPaymentInformation(): void
+    {
+        $this->requestData['TOTL'] = $this->parseAmount(
+            $this->data['payment']['amount']['total'],
+            $this->data['payment']['amount']['currency']
+        );
+        $this->requestData['CURR'] = $this->data['payment']['amount']['currency'];
+
+        if (!isset($this->data['cardNumber']) && !isset($this->data['instrument'])) {
+            return;
+        }
+
+        if (isset($this->data['cardNumber'])) {
+            $this->requestData = array_merge($this->requestData, $this->getCardData($this->data));
+        } elseif (isset($this->data['instrument'])) {
+            $instrument = $this->data['instrument'];
+            if ($instrument['type'] === SupportedInstruments::CARD) {
+                $this->requestData = array_merge(
+                    $this->requestData,
+                    $this->getCardData($instrument)
+                );
+            } elseif ($instrument['type'] === SupportedInstruments::ACCOUNT) {
+                $this->requestData = array_merge($this->requestData, [
+                    'PTOK' => $instrument['accountNumber'],
+                    'PTYP' => 'CHEK',
+                ]);
+            } elseif ($instrument['type'] === SupportedInstruments::BRAND_TOKEN) {
+                $this->requestData = array_merge($this->requestData, [
+                    'PTOK' => $instrument['token'],
+                    'PTYP' => 'TOKEN',
+                ]);
+            }
         }
     }
 

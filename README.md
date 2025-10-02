@@ -89,12 +89,15 @@ $data = [
     ],
     // Merchant Acknowledgement
     'mack' => 'Y',
-    // Card Related
-    'cardNumber' => '4111111111111111',
-    // M match, N Not match, X unavailable
-    'cvvStatus' => 'X',
-    // MM/YY format
-    'cardExpiration' => '12/20',
+    // Payment instrument information
+    'instrument' => [
+        'type' => 'card',
+        'cardNumber' => '4111111111111111',
+         // M match, N Not match, X unavailable
+        'cvvStatus' => 'X',
+        // MM/YY format
+        'cardExpiration' => '12/20',
+    ],
     // Person related
     'payer' => [
         'name' => 'Diego',
@@ -122,6 +125,34 @@ $data = [
     'shipmentType' => \PlacetoPay\Kount\Messages\Request::SHIP_SAME,
 ];
 ```
+Expected keys for **instrument**:
+
+Card:
+```php
+    'instrument' => [
+        'type' => 'card',
+        'cardNumber' => '4111111111111111',
+         // M match, N Not match, X unavailable
+        'cvvStatus' => 'X',
+        // MM/YY format
+        'cardExpiration' => '12/20',
+    ],
+```
+Bank account:
+```php
+    'instrument' => [
+        'type' => 'account',
+        'accountNumber' => '7640014847',
+    ],
+```
+Brand token:
+```php
+    'instrument' => [
+        'type' => 'brand_token',
+        'token' => 'abc123xyz098#',
+    ],
+```
+
 Please try to provide as much information as you can, but there is NOT required shipping, gender, shipmentType, more than 1 item (It has to be at least one), address for payer information
 
 ```php
