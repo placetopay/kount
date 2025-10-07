@@ -7,12 +7,25 @@ use PlacetoPay\Kount\Constants\SupportedInstruments;
 class InquiryRequest extends Request
 {
     private $requestData = [];
+    private array $instrumentData;
 
     public function __construct($session, $data = [])
     {
         parent::__construct($session, $data);
 
         $this->mode = self::MODE_INQUIRY;
+
+        $this->instrumentData = [
+            SupportedInstruments::CARD => function (array $data): array {
+                return $this->getCardData($data);
+            },
+            SupportedInstruments::ACCOUNT => function (array $data): array {
+                return $this->getAccountData($data);
+            },
+            SupportedInstruments::BRAND_TOKEN => function (array $data): array {
+                return $this->getBrandTokenData($data);
+            },
+        ];
     }
 
     public function asRequestData(): array
@@ -68,6 +81,22 @@ class InquiryRequest extends Request
         return $cardData;
     }
 
+    private function getAccountData(array $data): array
+    {
+        return [
+            'PTOK' => $data['accountNumber'],
+            'PTYP' => 'CHEK',
+        ];
+    }
+
+    private function getBrandTokenData(array $data): array
+    {
+        return [
+            'PTOK' => $data['token'],
+            'PTYP' => 'TOKEN',
+        ];
+    }
+
     private function setPaymentInformation(): void
     {
         $this->requestData['TOTL'] = $this->parseAmount(
@@ -76,29 +105,15 @@ class InquiryRequest extends Request
         );
         $this->requestData['CURR'] = $this->data['payment']['amount']['currency'];
 
-        if (!isset($this->data['cardNumber']) && !isset($this->data['instrument'])) {
+        if (isset($this->data['cardNumber'])) {
+            $this->requestData = array_merge($this->requestData, $this->getCardData($this->data));
             return;
         }
 
-        if (isset($this->data['cardNumber'])) {
-            $this->requestData = array_merge($this->requestData, $this->getCardData($this->data));
-        } elseif (isset($this->data['instrument'])) {
-            $instrument = $this->data['instrument'];
-            if ($instrument['type'] === SupportedInstruments::CARD) {
-                $this->requestData = array_merge(
-                    $this->requestData,
-                    $this->getCardData($instrument)
-                );
-            } elseif ($instrument['type'] === SupportedInstruments::ACCOUNT) {
-                $this->requestData = array_merge($this->requestData, [
-                    'PTOK' => $instrument['accountNumber'],
-                    'PTYP' => 'CHEK',
-                ]);
-            } elseif ($instrument['type'] === SupportedInstruments::BRAND_TOKEN) {
-                $this->requestData = array_merge($this->requestData, [
-                    'PTOK' => $instrument['token'],
-                    'PTYP' => 'TOKEN',
-                ]);
+        if (isset($this->data['instrument'])) {
+            $instrument = $this->instrumentData[$this->data['instrument']['type']] ?? null;
+            if (is_callable($instrument)) {
+                $this->requestData = array_merge($this->requestData, call_user_func($instrument, $this->data['instrument']));
             }
         }
     }
