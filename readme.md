@@ -3,7 +3,6 @@
 ## Installation
 
 This SDK can be installed easily through composer
-
 ```
 composer require placetopay/kount
 ```
@@ -20,17 +19,12 @@ $service = new \PlacetoPay\Kount\KountService([
 
 ### Data Collector
 
-First on the page where the credit card information will be gathered you need to place the iframe for the data
-collector, make sure to replace YOUR_WEBPAGE_URL, YOUR_MERCHANT and THE_SESSION for the payment
+First on the page where the credit card information will be gathered you need to place the iframe for the data collector, make sure to replace YOUR_WEBPAGE_URL, YOUR_MERCHANT and THE_SESSION for the payment
 
-Note: It HAS to be over HTTPS, and it does NOT has to be on the root of your url, you can
-use https://YOUR_WEBPAGE_URL/kount/something/logo.htm, and I'm not entirely sure that it needs to call logo.htm and
-logo.gif, but I'm using those names anyway
+Note: It HAS to be over HTTPS, and it does NOT has to be on the root of your url, you can use https://YOUR_WEBPAGE_URL/kount/something/logo.htm, and I'm not entirely sure that it needs to call logo.htm and logo.gif, but I'm using those names anyway
 
 ```html
-
-<iframe width=1 height=1 frameborder=0 scrolling=no
-        src="https://YOUR_WEBPAGE_URL/logo.htm?m=YOUR_MERCHANT&s=THE_SESSION">
+<iframe width=1 height=1 frameborder=0 scrolling=no src="https://YOUR_WEBPAGE_URL/logo.htm?m=YOUR_MERCHANT&s=THE_SESSION">
     <img width=1 height=1 src="https://YOUR_WEBPAGE_URL/logo.gif?m=YOUR_MERCHANT&s=THE_SESSION">
 </iframe>
 ```
@@ -44,9 +38,7 @@ Route::get('/kount/{slug?}', function($slug = null) {
 });
 ```
 
-This example it's made with Laravel, but the principle it's the same, slug its the logo.htm or logo.gif part, and the
-session it's captured through the GET variable, the merchant it's not required because it has been set on the
-initialization of the service
+This example it's made with Laravel, but the principle it's the same, slug its the logo.htm or logo.gif part, and the session it's captured through the GET variable, the merchant it's not required because it has been set on the initialization of the service
 
 Once this it's done, the data collector will be working just fine.
 
@@ -191,8 +183,7 @@ try {
 
 ### Available response information
 
-The response object provides a convenient structure and methods that allow you to get all the information returned by
-Kount.
+The response object provides a convenient structure and methods that allow you to get all the information returned by Kount.
 
 ```php
 $response->score();         //  33
@@ -314,7 +305,6 @@ $response->system->toArray();
 ```
 
 #### Decision information
-
 ```php
 $response->decision->code();             //  'D'
 $response->decision->description();      //  'DECLINE'
@@ -334,7 +324,6 @@ $response->decision->toArray();
 ```
 
 #### Verification result
-
 ```php
 $response->verification->geolocationCountry();                     //  'US'
 $response->verification->geolocationRegion();                      //  'EAST'
@@ -358,7 +347,6 @@ $response->verification->toArray();
 ```
 
 #### Transaction information
-
 ```php
 $response->transaction->id();                                // 'P01J0KZN329Z'
 $response->transaction->usedCardsCount();                    // 1
@@ -415,8 +403,8 @@ $response->transaction->toArray();
  */
 ```
 
-#### Transaction IP information
 
+#### Transaction IP information
 ```php
 $response->ip->address();          //  '181.128.85.221'
 $response->ip->latitude();         //  '6.2518'
@@ -537,7 +525,6 @@ $response->errors->toArray();
 ```
 
 #### Additional information
-
 ```php
 $response->additional->dateSinceFirstMadeTransaction();     //  '2017-05-30'
 $response->additional->screenResolution();                  //  '768x1366'
@@ -560,8 +547,7 @@ $response->additional->toArray();
 
 ### Mocked responses
 
-If you change the client on the settings for the mock client the responses would be mocked ones and the real service
-will not be used
+If you change the client on the settings for the mock client the responses would be mocked ones and the real service will not be used
 
 ```
 return new KountService([
@@ -570,8 +556,7 @@ return new KountService([
 ]);
 ```
 
-After this mock instance is loaded the available options to mock are this ones. Those are passed via
-`payment.reference`, meaning the reference on the transaction
+After this mock instance is loaded the available options to mock are this ones. Those are passed via `payment.reference`, meaning the reference on the transaction
 
 * AUTH_ERR - Simulates a bad or expired ApiKey
 * REVIEW - Simulates a review response
