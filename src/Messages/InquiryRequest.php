@@ -2,15 +2,30 @@
 
 namespace PlacetoPay\Kount\Messages;
 
+use PlacetoPay\Kount\Constants\SupportedInstruments;
+
 class InquiryRequest extends Request
 {
     private $requestData = [];
+    private array $instrumentData;
 
     public function __construct($session, $data = [])
     {
         parent::__construct($session, $data);
 
         $this->mode = self::MODE_INQUIRY;
+
+        $this->instrumentData = [
+            SupportedInstruments::CARD => function (array $data): array {
+                return $this->getCardData($data);
+            },
+            SupportedInstruments::ACCOUNT => function (array $data): array {
+                return $this->getAccountData($data);
+            },
+            SupportedInstruments::BRAND_TOKEN => function (array $data): array {
+                return $this->getBrandTokenData($data);
+            },
+        ];
     }
 
     public function asRequestData(): array
@@ -47,28 +62,59 @@ class InquiryRequest extends Request
         }
     }
 
-    private function setPaymentInformation(): void
+    private function getCardData(array $data): array
     {
-        $this->requestData['TOTL'] = $this->parseAmount($this->data['payment']['amount']['total'], $this->data['payment']['amount']['currency']);
-        $this->requestData['CURR'] = $this->data['payment']['amount']['currency'];
-
-        if (!isset($this->data['cardNumber'])) {
-            return;
-        }
-
-        $cardExpiration = explode('/', $this->data['cardExpiration']);
-
-        $this->requestData = array_merge($this->requestData, [
-            'PTOK' => $this->maskCardNumber($this->data['cardNumber']),
-            'LAST4' => substr($this->data['cardNumber'], -4),
+        $cardExpiration = explode('/', $data['cardExpiration']);
+        $cardData = [
+            'PTOK' => $this->maskCardNumber($data['cardNumber']),
+            'LAST4' => substr($data['cardNumber'], -4),
             'PTYP' => 'CARD',
             'PENC' => 'MASK',
             'CCMM' => $cardExpiration[0],
             'CCYY' => '20' . $cardExpiration[1],
-        ]);
+        ];
 
-        if (isset($this->data['cvvStatus'])) {
-            $this->requestData['CVVR'] = $this->data['cvvStatus'];
+        if (isset($data['cvvStatus'])) {
+            $cardData['CVVR'] = $data['cvvStatus'];
+        }
+
+        return $cardData;
+    }
+
+    private function getAccountData(array $data): array
+    {
+        return [
+            'PTOK' => $data['accountNumber'],
+            'PTYP' => 'CHEK',
+        ];
+    }
+
+    private function getBrandTokenData(array $data): array
+    {
+        return [
+            'PTOK' => $data['token'],
+            'PTYP' => 'TOKEN',
+        ];
+    }
+
+    private function setPaymentInformation(): void
+    {
+        $this->requestData['TOTL'] = $this->parseAmount(
+            $this->data['payment']['amount']['total'],
+            $this->data['payment']['amount']['currency']
+        );
+        $this->requestData['CURR'] = $this->data['payment']['amount']['currency'];
+
+        if (isset($this->data['cardNumber'])) {
+            $this->requestData = array_merge($this->requestData, $this->getCardData($this->data));
+            return;
+        }
+
+        if (isset($this->data['instrument'])) {
+            $instrument = $this->instrumentData[$this->data['instrument']['type']] ?? null;
+            if (is_callable($instrument)) {
+                $this->requestData = array_merge($this->requestData, call_user_func($instrument, $this->data['instrument']));
+            }
         }
     }
 
