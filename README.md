@@ -89,6 +89,12 @@ $data = [
     ],
     // Merchant Acknowledgement
     'mack' => 'Y',
+    // Card Related
+    'cardNumber' => '4111111111111111',
+     // M match, N Not match, X unavailable
+    'cvvStatus' => 'X',
+    // MM/YY format
+    'cardExpiration' => '12/20',
     // Payment instrument information
     'instrument' => [
         'type' => 'card',
@@ -125,6 +131,8 @@ $data = [
     'shipmentType' => \PlacetoPay\Kount\Messages\Request::SHIP_SAME,
 ];
 ```
+Card related keys outside the **instrument** key are still supported.
+
 Expected keys for **instrument**:
 
 Card:
