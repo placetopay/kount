@@ -237,29 +237,35 @@ class ParsingTest extends BaseTestCase
 
     public function testItParsesCorrectlyAnotherAmounts()
     {
-        $data = $this->basicRequestData(['payment' => [
-            'amount' => [
-                'total' => 1900,
-                'currency' => 'CLP',
-            ]],
+        $data = $this->basicRequestData([
+            'payment' => [
+                'amount' => [
+                    'total' => 1900,
+                    'currency' => 'CLP',
+                ],
+            ],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(1900, $inquiryRequest['TOTL']);
 
-        $data = $this->basicRequestData(['payment' => [
-            'amount' => [
-                'total' => 1900,
-                'currency' => 'JOD',
-            ]],
+        $data = $this->basicRequestData([
+            'payment' => [
+                'amount' => [
+                    'total' => 1900,
+                    'currency' => 'JOD',
+                ],
+            ],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(1900000, $inquiryRequest['TOTL']);
 
-        $data = $this->basicRequestData(['payment' => [
-            'amount' => [
-                'total' => 1900,
-                'currency' => 'COP',
-            ]],
+        $data = $this->basicRequestData([
+            'payment' => [
+                'amount' => [
+                    'total' => 1900,
+                    'currency' => 'COP',
+                ],
+            ],
         ]);
         $inquiryRequest = $this->service->parseInquiryRequest(5, $data)->asRequestData();
         $this->assertEquals(190000, $inquiryRequest['TOTL']);
@@ -292,5 +298,66 @@ class ParsingTest extends BaseTestCase
         $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
 
         $this->assertArrayNotHasKey('B2PN', $inquiryRequest->asRequestData());
+    }
+
+    /**
+     * @dataProvider instrumentDataProvider
+     */
+    public function testItParsesInquiryRequestWithInstrument(array $input, array $expected): void
+    {
+        $data = $this->basicRequestData();
+        $data['instrument'] = $input;
+        // Remove card related keys to use the instrument instead.
+        unset($data['cardNumber'], $data['cvvStatus'], $data['cardExpiration']);
+
+        $requestData = $this->service->parseInquiryRequest('123', $data)->asRequestData();
+
+        foreach ($expected as $key => $value) {
+            $this->assertArrayHasKey($key, $requestData);
+            $this->assertEquals($value, $requestData[$key]);
+        }
+    }
+
+    public static function instrumentDataProvider(): array
+    {
+        return [
+            [
+                'input' => [
+                    'type' => 'card',
+                    'cardNumber' => '4111111111111111',
+                    'cvvStatus' => 'X',
+                    'cardExpiration' => '12/24',
+                ],
+                'expected' => [
+                    'PTOK' => '411111XXXXXX1111',
+                    'LAST4' => '1111',
+                    'PTYP' => 'CARD',
+                    'PENC' => 'MASK',
+                    'CCMM' => '12',
+                    'CCYY' => '2024',
+                    'CVVR' => 'X',
+                ],
+            ],
+            [
+                'input' => [
+                    'type' => 'account',
+                    'accountNumber' => '1234567890',
+                ],
+                'expected' => [
+                    'PTOK' => '1234567890',
+                    'PTYP' => 'CHEK',
+                ],
+            ],
+            [
+                'input' => [
+                    'type' => 'brand_token',
+                    'token' => 'some-random-token',
+                ],
+                'expected' => [
+                    'PTOK' => 'some-random-token',
+                    'PTYP' => 'TOKEN',
+                ],
+            ],
+        ];
     }
 }
