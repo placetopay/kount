@@ -95,7 +95,7 @@ class MockClient
         if ('Bearer ' . self::VALID_API_TOKEN != $request->getHeader('Authorization')[0] ?? '') {
             return $this->response(401, [
                 'fault' => [
-                    'faultstring' => '{"efxErrorCode": "401.04", "messageParams": ["Invalid Token"]} ',
+                    'faultstring' => '{"efxErrorCode": "401.04", "messageParams": ["Invalid Token"]}',
                     'detail' => [
                         'errorcode' => 'custom',
                     ],
