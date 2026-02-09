@@ -79,4 +79,17 @@ class InquiryOrderTest extends BaseTestCase
         $this->assertFalse($response->successful());
         $this->assertEquals(400, $response->status());
     }
+
+    /**
+     * @test
+     */
+    public function itCannotInquiryAnOrderWithInvalidToken(): void
+    {
+        $request = $this->getOrderRequestStructure();
+
+        $response = $this->service()->inquiryOrder(MockClient::INVALID_API_TOKEN, $request);
+
+        $this->assertFalse($response->successful());
+        $this->assertEquals(401, $response->status());
+    }
 }

@@ -34,6 +34,13 @@ class Base
 
     public function toArray(): array
     {
+        if (isset($this->data['fault'])) {
+            $this->data['error'] = [
+                'code' => $this->response->getStatusCode(),
+                'message' => $this->data['fault']['faultstring'] ?? 'Unknown error',
+            ];
+        }
+
         return $this->data;
     }
 
