@@ -15,32 +15,32 @@ class ChargebackOrder extends Base
     public function body(): array
     {
         $reversalUpdate = [
-            'orderId' => $this->data['orderId'] ?? null,
-            'fraudReportType' => $this->data['fraudReportType'] ?? null,
+            'orderId' => (string)ArrayHelper::get($this->data, 'orderId'),
+            'fraudReportType' => (string)ArrayHelper::get($this->data, 'fraudReportType'),
         ];
 
         if (isset($this->data['chargeback'])) {
             $reversalUpdate['chargeback'] = [
                 'isChargeback' => true,
-                'transactionId' => $this->data['chargeback']['transactionId'] ?? null,
-                'reasonCode' => $this->data['chargeback']['reasonCode'] ?? null,
-                'cardType' => $this->data['chargeback']['cardType'] ?? null,
+                'transactionId' => (string)ArrayHelper::get($this->data, 'chargeback.transactionId'),
+                'reasonCode' => (string)ArrayHelper::get($this->data, 'chargeback.reasonCode'),
+                'cardType' => (string)ArrayHelper::get($this->data, 'chargeback.cardType'),
             ];
         }
 
         if (isset($this->data['refund'])) {
             $reversalUpdate['refund'] = [
                 'isRefund' => true,
-                'transactionId' => $this->data['refund']['transactionId'] ?? null,
-                'dateTime' => $this->data['refund']['date'] ?? null,
+                'transactionId' => (string)ArrayHelper::get($this->data, 'refund.transactionId'),
+                'dateTime' => (string)ArrayHelper::get($this->data, 'refund.date'),
                 'amount' => isset($this->data['refund']['amount']['total'], $this->data['refund']['amount']['currency']) ?
                     AmountHelper::parseAmount(
                         $this->data['refund']['amount']['total'],
                         $this->data['refund']['amount']['currency'],
                         $this->data['refund']['amount']['inMinorUnit'] ?? true
                     ) : null,
-                'currency' => $this->data['refund']['amount']['currency'] ?? null,
-                'gatewayReceipt' => $this->data['refund']['receipt'] ?? null,
+                'currency' => (string)ArrayHelper::get($this->data, 'refund.amount.currency'),
+                'gatewayReceipt' => (string)ArrayHelper::get($this->data, 'refund.receipt'),
             ];
         }
 

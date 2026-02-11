@@ -14,13 +14,13 @@ class UpdateOrder extends Base
 
     public function body(): array
     {
-        $this->requestData['merchantOrderId'] = $this->data['payment']['reference'] ?? null;
-        $this->requestData['deviceSessionId'] = $this->data['kountSessionId'] ?? null;
+        $this->requestData['merchantOrderId'] = (string)ArrayHelper::get($this->data, 'payment.reference');
+        $this->requestData['deviceSessionId'] = (string)ArrayHelper::get($this->data, 'kountSessionId');
 
         if (isset($this->data['riskInquiry'])) {
             $this->requestData['riskInquiry'] = [
-                'decision' => $this->data['riskInquiry']['decision'] ?? null,
-                'reasonCode' => $this->data['riskInquiry']['reasonCode'] ?? null,
+                'decision' => (string)ArrayHelper::get($this->data, 'riskInquiry.decision'),
+                'reasonCode' => (string)ArrayHelper::get($this->data, 'riskInquiry.reasonCode'),
             ];
         }
 
