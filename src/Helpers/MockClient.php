@@ -27,6 +27,8 @@ class MockClient
     {
     }
 
+
+
     public static function instance(): self
     {
         if (!self::$instance) {
@@ -39,6 +41,11 @@ class MockClient
     public function request(): RequestInterface
     {
         return $this->request;
+    }
+
+    public function lastResponse(): array
+    {
+        return $this->lastResponse;
     }
 
     public function data(): mixed
