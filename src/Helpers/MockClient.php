@@ -16,6 +16,7 @@ class MockClient
 
     protected RequestInterface $request;
     protected array $data = [];
+    protected array $lastResponse = [];
 
     public const INVALID_API_TOKEN = 'invalid_token_for_testing_purposes';
     public const VALID_API_TOKEN = 'valid_token_for_testing_purposes';
@@ -83,7 +84,11 @@ class MockClient
         $uri = $request->getUri()->getPath();
 
         if (str_contains($uri, '/v1/token')) {
-            return $this->handleToken();
+            $response = $this->handleToken();
+
+            $this->lastResponse = $response[1];
+
+            return $this->response(...$response);
         }
 
         if (!empty($body = $request->getBody()->getContents())) {
@@ -93,31 +98,39 @@ class MockClient
         $method = $request->getMethod();
 
         if ('Bearer ' . self::VALID_API_TOKEN != $request->getHeader('Authorization')[0] ?? '') {
-            return $this->response(401, [
+            $response = [401, [
                 'fault' => [
                     'faultstring' => '{"efxErrorCode": "401.04", "messageParams": ["Invalid Token"]}',
                     'detail' => [
                         'errorcode' => 'custom',
                     ],
                 ],
-            ]);
+            ]];
+
+            $this->lastResponse = $response[1];
+
+            return $this->response(...$response);
         }
 
-        return match (true) {
+        $response = match (true) {
             $method == 'POST' && $request->getUri()->getQuery() === 'riskInquiry=true' => $this->handleInquiryOrder(),
             $method == 'POST' => $this->handleCreateOrder(),
             $method == 'GET' => $this->handleGetOrder(),
             $method == 'PATCH' && str_contains($uri, ':batchUpdateReversals') => $this->handleReversals(),
             $method == 'PATCH' => $this->handleUpdate(),
-            default => $this->response('500', [
+            default => ['500', [
                 'fault' => [
                     'faultstring' => '{"efxErrorCode": "501.01"}',
                     'detail' => [
                         'errorcode' => 'custom',
                     ],
                 ],
-            ])
+            ]]
         };
+
+        $this->lastResponse = $response[1];
+
+        return $this->response(...$response);
     }
 
     public function getData(string $attribute): mixed
@@ -132,7 +145,7 @@ class MockClient
         )]);
     }
 
-    private function handleUpdate(): FulfilledPromise
+    private function handleUpdate(): array
     {
         $orderId = str_replace('/commerce/v2/orders/', '', $this->request->getUri()->getPath());
 
@@ -145,47 +158,47 @@ class MockClient
         ];
 
         return match ($orderId) {
-            'VALIDATION_ERROR' => $this->response(400, [
+            'VALIDATION_ERROR' => [400, [
                 'correlationId' => strtoupper(uniqid()),
                 'error' => [
                     'code' => 400,
                     'message' => 'failed to validate input',
                 ],
-            ]),
-            'NOT_FOUND' => $this->response(404, [
+            ]],
+            'NOT_FOUND' =>[404, [
                 'correlationId' => strtoupper(uniqid()),
                 'error' => [
                     'code' => 404,
                     'message' => 'unable to retrieve requested resource. resource does not exist',
                 ],
-            ]),
+            ]],
             'EXCEPTION' => throw new Exception('Testing purposes exception'),
-            default => $this->response(200, $response)
+            default => [200, $response]
         };
     }
 
-    private function handleToken(): FulfilledPromise
+    private function handleToken(): array
     {
         return match ($this->request()->getHeader('Authorization')[0] ?? '') {
-            'Basic ' . self::INVALID_API_KEY => $this->response(200, [
+            'Basic ' . self::INVALID_API_KEY => [200, [
                 'token_type' => 'Bearer',
                 'expires_in' => 1200,
                 'access_token' => self::INVALID_API_TOKEN,
                 'scope' => 'k1_integration_api',
-            ]),
-            'Basic ' . self::VALID_API_KEY => $this->response(200, [
+            ]],
+            'Basic ' . self::VALID_API_KEY => [200, [
                 'token_type' => 'Bearer',
                 'expires_in' => 1200,
                 'access_token' => self::VALID_API_TOKEN,
                 'scope' => 'k1_integration_api',
-            ]),
-            default => $this->response(401, [
+            ]],
+            default => [401, [
                 'errorCode' => 'invalid_client',
                 'errorSummary' => 'Invalid value for \'client_id\' parameter.',
                 'errorLink' => 'invalid_client',
                 'errorId' => 'oaelIt6Eb5ZRbO9cmlJrouO0A',
                 'errorCauses' => [],
-            ])
+            ]]
         };
     }
 
@@ -228,24 +241,24 @@ class MockClient
         ];
     }
 
-    private function handleCreateOrder(): FulfilledPromise
+    private function handleCreateOrder(): array
     {
         $response = $this->basicOrderResponse();
 
         return match ($this->getData('merchantOrderId')) {
-            'VALIDATION_ERROR' => $this->response(400, [
+            'VALIDATION_ERROR' => [400, [
                 'correlationId' => strtoupper(uniqid()),
                 'error' => [
                     'code' => 400,
                     'message' => 'merchantOrderId: field must be valid: failed to validate input',
                 ],
-            ]),
+            ]],
             'EXCEPTION' => throw new Exception('Testing purposes exception'),
-            default => $this->response(200, $response)
+            default => [200, $response]
         };
     }
 
-    private function handleInquiryOrder(): FulfilledPromise
+    private function handleInquiryOrder(): array
     {
         $response = $this->basicOrderResponse();
 
@@ -368,19 +381,19 @@ class MockClient
         ]);
 
         return match ($this->getData('merchantOrderId')) {
-            'VALIDATION_ERROR' => $this->response(400, [
+            'VALIDATION_ERROR' => [400, [
                 'correlationId' => strtoupper(uniqid()),
                 'error' => [
                     'code' => 400,
                     'message' => 'merchantOrderId: field must be valid: failed to validate input',
                 ],
-            ]),
+            ]],
             'EXCEPTION' => throw new Exception('Testing purposes exception'),
-            default => $this->response(200, $response)
+            default => [200, $response]
         };
     }
 
-    private function handleGetOrder(): FulfilledPromise
+    private function handleGetOrder(): array
     {
         $orderId = str_replace('/commerce/v2/orders/', '', $this->request->getUri()->getPath());
 
@@ -727,40 +740,40 @@ class MockClient
         ];
 
         return match ($orderId) {
-            'VALIDATION_ERROR' => $this->response(400, [
+            'VALIDATION_ERROR' => [400, [
                 'correlationId' => strtoupper(uniqid()),
                 'error' => [
                     'code' => 400,
                     'message' => 'failed to validate input',
                 ],
-            ]),
-            'NOT_FOUND' => $this->response(404, [
+            ]],
+            'NOT_FOUND' => [404, [
                 'correlationId' => strtoupper(uniqid()),
                 'error' => [
                     'code' => 404,
                     'message' => 'unable to retrieve requested resource. resource does not exist',
                 ],
-            ]),
+            ]],
             'EXCEPTION' => throw new Exception('Testing purposes exception'),
-            default => $this->response(200, $response)
+            default => [200, $response]
         };
     }
 
-    private function handleReversals(): FulfilledPromise
+    private function handleReversals(): array
     {
         return match ($this->getData('reversalsUpdates')[0]['orderId'] ?? '') {
-            'VALIDATION_ERROR' => $this->response(200, [
+            'VALIDATION_ERROR' => [200, [
                 'errors' => [
                     [
                         'orderId' => 'D2WFWRV4DYS9Ms4GK',
                         'error' => 'failed to find current reversal status for order',
                     ],
                 ],
-            ]),
+            ]],
             'EXCEPTION' => throw new Exception('Testing purposes exception'),
-            default => $this->response(200, [
+            default => [200, [
                 'errors' => [],
-            ])
+            ]]
         };
     }
 }
