@@ -30,16 +30,7 @@ Note: It HAS to be over HTTPS, and it does NOT has to be on the root of your url
         src="https://YOUR_WEBPAGE_URL/logo.htm?m=YOUR_MERCHANT&s=THE_SESSION">
     <img width=1 height=1 src="https://YOUR_WEBPAGE_URL/logo.gif?m=YOUR_MERCHANT&s=THE_SESSION">
 </iframe>
-```
-
-Then make sure that your application responds with a HTTP code 302 to redirect to the Kount's url
-
-```php
-Route::get('/kount/{slug?}', function($slug = null) {
-    $s = Request::get('s');
-    return redirect($service->dataCollectorUrl($s, $slug));
-});
-```
+``` 
 
 This example it's made with Laravel, but the principle it's the same, slug its the logo.htm or logo.gif part, and the session it's captured through the GET variable, the merchant it's not required because it has been set on the initialization of the service
 
