@@ -27,8 +27,6 @@ class MockClient
     {
     }
 
-
-
     public static function instance(): self
     {
         if (!self::$instance) {

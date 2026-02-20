@@ -134,6 +134,8 @@ trait HasOrderStructure
             ],
 
             'payer' => [
+                'document' => '123456789',
+                'documentType' => 'CC',
                 'name' => 'John',
                 'surname' => 'Doe',
                 'preferred' => 'Johnny',

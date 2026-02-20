@@ -38,6 +38,12 @@ class CreateOrder extends Base
 
     private function setAccountInformation(): void
     {
+        if (($documentType = ArrayHelper::get($this->data, 'payer.documentType')) && ($document = ArrayHelper::get($this->data, 'payer.document'))) {
+            $this->requestData['account'] = [
+                'id' => $documentType . $document,
+            ];
+        }
+
         if (isset($this->data['account'])) {
             $this->requestData['account'] = [
                 'id' => (string)ArrayHelper::get($this->data, 'account.id'),

@@ -536,7 +536,6 @@ class CreateOrderTest extends BaseTestCase
         $clean = new CreateOrder($clean);
 
         $this->assertArrayNotHasKey('promotions', $clean->body());
-        $this->assertArrayNotHasKey('account', $clean->body());
         $this->assertArrayNotHasKey('items', $clean->body());
         $this->assertArrayNotHasKey('customFields', $clean->body());
         $this->assertArrayNotHasKey('loyalty', $clean->body());
