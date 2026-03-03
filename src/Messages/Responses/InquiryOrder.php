@@ -2,37 +2,24 @@
 
 namespace PlacetoPay\Kount\Messages\Responses;
 
-use PlacetoPay\Kount\Constants\DecisionCodes;
+use GuzzleHttp\Psr7\Response;
+use PlacetoPay\Kount\Messages\Responses\Entities\Order;
 
 class InquiryOrder extends CreateOrder
 {
-    public function omniscore(): ?float
+    private ?Order $order = null;
+
+    public function __construct(Response $response)
     {
-        return $this->get('order.riskInquiry.omniscore');
+        parent::__construct($response);
+
+        if ($order = $this->get('order')) {
+            $this->order = new Order($order);
+        }
     }
 
-    public function decision(): ?string
+    public function order(): ?Order
     {
-        return $this->get('order.riskInquiry.decision');
-    }
-
-    public function shouldApprove(): bool
-    {
-        return $this->get('order.riskInquiry.decision') === DecisionCodes::APPROVE;
-    }
-
-    public function shouldDecline(): bool
-    {
-        return $this->get('order.riskInquiry.decision') === DecisionCodes::DECLINE;
-    }
-
-    public function shouldReview(): bool
-    {
-        return $this->get('order.riskInquiry.decision') === DecisionCodes::REVIEW;
-    }
-
-    public function rulesTriggered(): array
-    {
-        return $this->get('order.riskInquiry.segmentExecuted.policiesExecuted', []);
+        return $this->order;
     }
 }

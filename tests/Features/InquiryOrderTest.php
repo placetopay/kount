@@ -21,6 +21,14 @@ class InquiryOrderTest extends BaseTestCase
         $response = $this->service()->inquiryOrder(MockClient::VALID_API_TOKEN, $request);
 
         $this->assertTrue($response->successful());
+        $this->assertTrue($response->order()->riskInquiry()->device()->wasVerifiedUsingDevice());
+        $this->assertIsArray($response->order()->riskInquiry()->rulesTriggered());
+        $this->assertEquals('US', $response->order()->riskInquiry()->persona()->riskiestCountry());
+        $this->assertEquals(3, $response->order()->riskInquiry()->persona()->totalBankApprovedOrders());
+        $this->assertEquals(2, $response->order()->riskInquiry()->persona()->maxVelocity());
+        $this->assertEquals(3, $response->order()->riskInquiry()->persona()->uniqueCards());
+        $this->assertEquals(2, $response->order()->riskInquiry()->persona()->uniqueEmails());
+        $this->assertEquals(5, $response->order()->riskInquiry()->persona()->uniqueDevices());
     }
 
     /**
@@ -39,11 +47,11 @@ class InquiryOrderTest extends BaseTestCase
 
         $this->assertTrue($response->successful());
         $this->assertEquals(200, $response->status());
-        $this->assertEquals($behaviour, $response->decision());
-        $this->assertTrue(match ($response->decision()) {
-            'APPROVE' => $response->shouldApprove(),
-            'REVIEW' => $response->shouldReview(),
-            'DECLINE' => $response->shouldDecline(),
+        $this->assertEquals($behaviour, $response->order()->riskInquiry()->decision());
+        $this->assertTrue(match ($response->order()->riskInquiry()->decision()) {
+            'APPROVE' => $response->order()->riskInquiry()->shouldApprove(),
+            'REVIEW' => $response->order()->riskInquiry()->shouldReview(),
+            'DECLINE' => $response->order()->riskInquiry()->shouldDecline(),
             default => false,
         });
     }
