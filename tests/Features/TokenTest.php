@@ -25,6 +25,13 @@ class TokenTest extends BaseTestCase
         $this->assertEquals($token->accessToken(), MockClient::VALID_API_TOKEN);
         $this->assertTrue($token->successful());
         $this->assertEquals(200, $token->status());
+        $this->assertEquals('k1_integration_api', $token->scope());
+        $this->assertEquals('Bearer', $token->tokenType());
+        $this->assertEquals('1200', $token->expiresIn());
+        $this->assertEquals(
+            '{"token_type":"Bearer","expires_in":1200,"access_token":"valid_token_for_testing_purposes","scope":"k1_integration_api"}',
+            $token->raw()
+        );
     }
 
     /**

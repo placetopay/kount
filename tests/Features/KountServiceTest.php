@@ -2,8 +2,10 @@
 
 namespace Tests\Features;
 
+use GuzzleHttp\Psr7\Response;
 use PlacetoPay\Kount\Exceptions\KountServiceException;
 use PlacetoPay\Kount\KountService;
+use PlacetoPay\Kount\Messages\Responses\Token;
 use Tests\BaseTestCase;
 
 class KountServiceTest extends BaseTestCase
@@ -11,12 +13,29 @@ class KountServiceTest extends BaseTestCase
     /** @test */
     public function itCanInstantiateTheService(): void
     {
-        $this->assertInstanceOf(KountService::class, new KountService([
+        $settings = [
             'apiKey' => 'testingValues',
+            'sandbox' => true,
             'merchant' => 'testingValues',
             'website' => 'testingValues',
+        ];
+
+        $service = new KountService($settings);
+
+        $this->assertEquals([
+            'apiKey' => 'testingValues',
             'sandbox' => true,
-        ]));
+            'clientId' => 'testingValues',
+            'channel' => 'testingValues',
+        ], $service->getSettings());
+    }
+
+    /** @test */
+    public function itFailsDecodingJson(): void
+    {
+        $this->expectException(KountServiceException::class);
+
+        new Token(new Response(200, [], 'testing', '1.1'));
     }
 
     /** @test */
@@ -25,11 +44,11 @@ class KountServiceTest extends BaseTestCase
         $this->expectException(KountServiceException::class);
         $this->expectExceptionMessage('Values for apiKey, website or merchant has to be provided');
 
-        $this->assertInstanceOf(KountService::class, new KountService([
+        new KountService([
             'merchant' => 'testingValues',
             'website' => 'testingValues',
             'sandbox' => true,
-        ]));
+        ]);
     }
 
     /** @test */
@@ -38,11 +57,11 @@ class KountServiceTest extends BaseTestCase
         $this->expectException(KountServiceException::class);
         $this->expectExceptionMessage('Values for apiKey, website or merchant has to be provided');
 
-        $this->assertInstanceOf(KountService::class, new KountService([
+        new KountService([
             'apiKey' => 'testingValues',
             'website' => 'testingValues',
             'sandbox' => true,
-        ]));
+        ]);
     }
 
     /** @test */
@@ -51,10 +70,10 @@ class KountServiceTest extends BaseTestCase
         $this->expectException(KountServiceException::class);
         $this->expectExceptionMessage('Values for apiKey, website or merchant has to be provided');
 
-        $this->assertInstanceOf(KountService::class, new KountService([
+        new KountService([
             'apiKey' => 'testingValues',
             'merchant' => 'testingValues',
             'sandbox' => true,
-        ]));
+        ]);
     }
 }

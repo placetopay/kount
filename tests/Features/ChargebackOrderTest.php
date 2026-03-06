@@ -52,6 +52,18 @@ class ChargebackOrderTest extends BaseTestCase
 
         $this->assertFalse($response->successful());
         $this->assertEquals(401, $response->status());
+        $this->assertEquals([
+            'fault' => [
+                'detail' => [
+                    'errorcode' => 'custom',
+                ],
+                'faultstring' => '{"efxErrorCode": "401.04", "messageParams": ["Invalid Token"]}',
+            ],
+            'error' => [
+                'code' => 401,
+                'message' => '{"efxErrorCode": "401.04", "messageParams": ["Invalid Token"]}',
+            ],
+        ], $response->toArray());
     }
 
     /**
@@ -107,10 +119,10 @@ class ChargebackOrderTest extends BaseTestCase
                 'transactionId' => 'testing_refund_TransactionId',
                 'date' => '2024-06-10T12:00:00.000Z',
                 'amount' => [
-                        'total' => 1234,
-                        'currency' => 'USD',
-                        'inMinorUnit' => false,
-                    ],
+                    'total' => 1234,
+                    'currency' => 'USD',
+                    'inMinorUnit' => false,
+                ],
                 'receipt' => 'testing_refund_Receipt',
             ],
         ];

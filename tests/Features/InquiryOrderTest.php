@@ -23,6 +23,7 @@ class InquiryOrderTest extends BaseTestCase
         $this->assertTrue($response->successful());
         $this->assertTrue($response->order()->riskInquiry()->device()->wasVerifiedUsingDevice());
         $this->assertIsArray($response->order()->riskInquiry()->rulesTriggered());
+        $this->assertEquals(99.9, $response->order()->riskInquiry()->omniscore());
         $this->assertEquals('US', $response->order()->riskInquiry()->persona()->riskiestCountry());
         $this->assertEquals(3, $response->order()->riskInquiry()->persona()->totalBankApprovedOrders());
         $this->assertEquals(2, $response->order()->riskInquiry()->persona()->maxVelocity());
@@ -54,6 +55,40 @@ class InquiryOrderTest extends BaseTestCase
             'DECLINE' => $response->order()->riskInquiry()->shouldDecline(),
             default => false,
         });
+    }
+
+    /**
+     * @test
+     */
+    public function itCanInquiryAnOrderWithToken(): void
+    {
+        $request = $this->getOrderRequestStructure([
+            'instrument' => [
+                'token' => 'testing_token',
+            ],
+        ]);
+
+        unset($request['instrument']['card']);
+
+        $response = $this->service()->inquiryOrder(MockClient::VALID_API_TOKEN, $request);
+
+        $this->assertTrue($response->successful());
+        $this->assertEquals(200, $response->status());
+    }
+
+    /**
+     * @test
+     */
+    public function itCanInquiryAnOrderWithoutInstrument(): void
+    {
+        $request = $this->getOrderRequestStructure();
+
+        unset($request['instrument']);
+
+        $response = $this->service()->inquiryOrder(MockClient::VALID_API_TOKEN, $request);
+
+        $this->assertTrue($response->successful());
+        $this->assertEquals(200, $response->status());
     }
 
     /**

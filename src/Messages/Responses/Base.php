@@ -29,7 +29,6 @@ class Base
 
             $this->data = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         } catch (\Throwable $e) {
-            dump($e);
             throw new KountServiceException($e->getMessage(), $e->getCode(), $e);
         }
     }
