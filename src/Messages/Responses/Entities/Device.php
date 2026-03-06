@@ -2,11 +2,11 @@
 
 namespace PlacetoPay\Kount\Messages\Responses\Entities;
 
-use PlacetoPay\Kount\Helpers\ArrayHelper;
+use PlacetoPay\Kount\Traits\HasData;
 
 class Device
 {
-    private array $data;
+    use HasData;
 
     public function __construct(array $data)
     {
@@ -15,6 +15,6 @@ class Device
 
     public function wasVerifiedUsingDevice(): bool
     {
-        return !is_null(ArrayHelper::get($this->data, 'id'));
+        return !is_null($this->get('id'));
     }
 }

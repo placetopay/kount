@@ -2,15 +2,19 @@
 
 namespace PlacetoPay\Kount\Messages\Responses\Entities;
 
-use PlacetoPay\Kount\Helpers\ArrayHelper;
+use PlacetoPay\Kount\Traits\HasData;
 
 class Order
 {
+    use HasData;
+
     private ?RiskInquiry $riskInquiry = null;
 
     public function __construct(array $data)
     {
-        if ($riskInquiry = ArrayHelper::get($data, 'riskInquiry')) {
+        $this->data = $data;
+
+        if ($riskInquiry = $this->get('riskInquiry')) {
             $this->riskInquiry = new RiskInquiry($riskInquiry);
         }
     }

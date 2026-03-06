@@ -2,11 +2,11 @@
 
 namespace PlacetoPay\Kount\Messages\Responses\Entities;
 
-use PlacetoPay\Kount\Helpers\ArrayHelper;
+use PlacetoPay\Kount\Traits\HasData;
 
 class Persona
 {
-    private array $data;
+    use HasData;
 
     public function __construct(array $data)
     {
@@ -15,31 +15,31 @@ class Persona
 
     public function riskiestCountry(): ?string
     {
-        return ArrayHelper::get($this->data, 'riskiestCountry');
+        return $this->get('riskiestCountry');
     }
 
     public function totalBankApprovedOrders(): ?int
     {
-        return ArrayHelper::get($this->data, 'totalBankApprovedOrders');
+        return $this->get('totalBankApprovedOrders');
     }
 
     public function maxVelocity(): ?int
     {
-        return ArrayHelper::get($this->data, 'maxVelocity');
+        return $this->get('maxVelocity');
     }
 
     public function uniqueCards(): ?int
     {
-        return ArrayHelper::get($this->data, 'uniqueCards');
+        return $this->get('uniqueCards');
     }
 
     public function uniqueEmails(): ?int
     {
-        return ArrayHelper::get($this->data, 'uniqueEmails');
+        return $this->get('uniqueEmails');
     }
 
     public function uniqueDevices(): ?int
     {
-        return ArrayHelper::get($this->data, 'uniqueDevices');
+        return $this->get('uniqueDevices');
     }
 }

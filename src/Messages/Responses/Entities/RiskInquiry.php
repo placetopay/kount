@@ -3,23 +3,24 @@
 namespace PlacetoPay\Kount\Messages\Responses\Entities;
 
 use PlacetoPay\Kount\Constants\DecisionCodes;
-use PlacetoPay\Kount\Helpers\ArrayHelper;
+use PlacetoPay\Kount\Traits\HasData;
 
 class RiskInquiry
 {
+    use HasData;
+
     private ?Device $device = null;
     private ?Persona $persona = null;
-    private array $data;
 
     public function __construct(array $data)
     {
         $this->data = $data;
 
-        if ($device = ArrayHelper::get($data, 'device')) {
+        if ($device = $this->get('device')) {
             $this->device = new Device($device);
         }
 
-        if ($persona = ArrayHelper::get($data, 'persona')) {
+        if ($persona = $this->get('persona')) {
             $this->persona = new Persona($persona);
         }
     }
@@ -36,31 +37,31 @@ class RiskInquiry
 
     public function omniscore(): ?float
     {
-        return ArrayHelper::get($this->data, 'omniscore');
+        return $this->get('omniscore');
     }
 
     public function decision(): ?string
     {
-        return ArrayHelper::get($this->data, 'decision');
+        return $this->get('decision');
     }
 
     public function shouldApprove(): bool
     {
-        return ArrayHelper::get($this->data, 'decision') === DecisionCodes::APPROVE;
+        return $this->get('decision') === DecisionCodes::APPROVE;
     }
 
     public function shouldDecline(): bool
     {
-        return ArrayHelper::get($this->data, 'decision') === DecisionCodes::DECLINE;
+        return $this->get('decision') === DecisionCodes::DECLINE;
     }
 
     public function shouldReview(): bool
     {
-        return ArrayHelper::get($this->data, 'decision') === DecisionCodes::REVIEW;
+        return $this->get('decision') === DecisionCodes::REVIEW;
     }
 
     public function rulesTriggered(): array
     {
-        return ArrayHelper::get($this->data, 'segmentExecuted.policiesExecuted', []);
+        return $this->get('segmentExecuted.policiesExecuted', []);
     }
 }

@@ -4,12 +4,13 @@ namespace PlacetoPay\Kount\Messages\Responses;
 
 use GuzzleHttp\Psr7\Response;
 use PlacetoPay\Kount\Exceptions\KountServiceException;
-use PlacetoPay\Kount\Helpers\ArrayHelper;
+use PlacetoPay\Kount\Traits\HasData;
 
 class Base
 {
+    use HasData;
+
     protected Response $response;
-    protected array $data = [];
 
     /**
      * @throws KountServiceException
@@ -43,11 +44,6 @@ class Base
         }
 
         return $this->data;
-    }
-
-    public function get(string $key, mixed $default = null): mixed
-    {
-        return ArrayHelper::get($this->data, $key, $default);
     }
 
     public function status(): int
