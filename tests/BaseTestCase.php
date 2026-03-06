@@ -15,16 +15,7 @@ class BaseTestCase extends TestCase
             'merchant' => getenv('MERCHANT') ?: 'YOUR_MERCHANT',
             'apiKey' => getenv('APIKEY') ?: 'THE_API_KEY_PROVIDED',
             'website' => getenv('WEBSITE') ?: 'THE_AWC_SITE_NAME',
+            'sandbox' => true,
         ], $overrides));
-    }
-
-    public function serialize($data)
-    {
-        return base64_encode(serialize($data));
-    }
-
-    public function unserialize($coded)
-    {
-        return unserialize(base64_decode($coded));
     }
 }

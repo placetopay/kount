@@ -4,8 +4,8 @@ namespace PlacetoPay\Kount\Constants;
 
 class DecisionCodes
 {
-    public const APPROVE = 'A';
-    public const DECLINE = 'D';
-    public const REVIEW = 'R';
-    public const ERROR = 'E';
+    public const APPROVE = 'APPROVE';
+    public const DECLINE = 'DECLINE';
+    public const REVIEW = 'REVIEW';
+    public const ERROR = 'ERROR';
 }
