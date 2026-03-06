@@ -2,6 +2,7 @@
 
 namespace Tests\Features;
 
+use PlacetoPay\Kount\Constants\PaymentTypes;
 use PlacetoPay\Kount\Exceptions\KountServiceException;
 use PlacetoPay\Kount\Helpers\MockClient;
 use Tests\BaseTestCase;
@@ -63,8 +64,43 @@ class InquiryOrderTest extends BaseTestCase
     public function itCanInquiryAnOrderWithToken(): void
     {
         $request = $this->getOrderRequestStructure([
+            'payment' => [
+                'amount' => [
+                    'details' => [
+                        [
+                            'kind' => 'subtotal',
+                            'amount' => 10000,
+                        ],
+                        [
+                            'kind' => 'shipping',
+                            'amount' => null,
+                        ],
+                    ],
+                ],
+            ],
             'instrument' => [
-                'token' => 'testing_token',
+                'token' => [
+                    'token' => 'testing_token',
+                ],
+            ],
+        ]);
+
+        unset($request['instrument']['card']);
+
+        $response = $this->service()->inquiryOrder(MockClient::VALID_API_TOKEN, $request);
+
+        $this->assertTrue($response->successful());
+        $this->assertEquals(200, $response->status());
+    }
+
+    /**
+     * @test
+     */
+    public function itCanInquiryAnOrderWithCustomInstrument(): void
+    {
+        $request = $this->getOrderRequestStructure([
+            'instrument' => [
+                'type' => PaymentTypes::AMAZON_PAY,
             ],
         ]);
 

@@ -22,9 +22,11 @@ class CreateOrderTest extends BaseTestCase
     {
         $request = $this->getOrderRequestStructure();
 
+        /** @var \PlacetoPay\Kount\Messages\Responses\CreateOrder $response */
         $response = $this->service()->createOrder(MockClient::VALID_API_TOKEN, $request);
 
         $this->assertTrue($response->successful());
+        $this->assertNotEmpty($response->orderId());
     }
 
     /**
