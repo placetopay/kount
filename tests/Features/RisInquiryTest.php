@@ -94,10 +94,9 @@ class RisInquiryTest extends BaseTestCase
     }
 
     /**
-     * @test
      * @throws GuzzleException
      */
-    public function it_handles_a_basic_error()
+    public function test_it_handles_a_basic_error(): void
     {
         $this->expectException(KountServiceException::class);
         $this->expectExceptionMessage('501');
