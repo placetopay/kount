@@ -80,14 +80,11 @@ class MockClient
         parse_str($request->getBody()->getContents(), $data);
         $this->data = $data;
 
-        switch ($data['MODE' ?? null]) {
-            case 'Q':
-                return $this->handleQuery();
-            case 'U':
-                return $this->handleUpdate();
-            default:
-                return $this->response('400', 'Bad request');
-        }
+        return match ($data['MODE'] ?? null) {
+            'Q' => $this->handleQuery(),
+            'U' => $this->handleUpdate(),
+            default => $this->response('400', 'Bad request'),
+        };
     }
 
     /**
