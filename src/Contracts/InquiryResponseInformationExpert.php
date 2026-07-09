@@ -6,11 +6,8 @@ use PlacetoPay\Kount\Messages\InquiryResponse;
 
 abstract class InquiryResponseInformationExpert
 {
-    private InquiryResponse $parent;
-
-    public function __construct(InquiryResponse $parent)
+    public function __construct(private InquiryResponse $parent)
     {
-        $this->parent = $parent;
     }
 
     protected function data($key = null, $default = null): ?string
