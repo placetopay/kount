@@ -137,6 +137,6 @@ abstract class Request
         ];
         $decimals = $currenciesDecimals[$currency] ?? 2;
 
-        return (int)(round($total, $decimals) * pow(10, $decimals));
+        return (int)(round($total, $decimals) * 10 ** $decimals);
     }
 }
