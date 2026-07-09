@@ -30,10 +30,6 @@ class Response
             return $this->data;
         }
 
-        if (isset($this->data[$key])) {
-            return $this->data[$key];
-        }
-
-        return $default;
+        return $this->data[$key] ?? $default;
     }
 }
