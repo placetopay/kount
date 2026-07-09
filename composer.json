@@ -37,7 +37,7 @@
   },
   "scripts": {
     "phpcs": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
-    "phpunit": "phpunit --bootstrap vendor/autoload.php --verbose --testdox tests/",
+    "phpunit": "phpunit --bootstrap vendor/autoload.php --testdox tests/",
     "test": [
       "@phpcs",
       "@phpunit"
