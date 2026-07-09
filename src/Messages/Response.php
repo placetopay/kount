@@ -14,7 +14,7 @@ class Response
         $lines = preg_split('/[\r\n]+/', $response, -1, PREG_SPLIT_NO_EMPTY);
 
         foreach ($lines as $line) {
-            list($key, $value) = explode('=', $line, 2);
+            [$key, $value] = explode('=', $line, 2);
             $this->data[$key] = $value;
         }
     }
