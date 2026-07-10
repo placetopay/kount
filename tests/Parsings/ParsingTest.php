@@ -9,9 +9,9 @@ class ParsingTest extends BaseTestCase
 {
     protected KountService $service;
 
-    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    protected function setUp(): void
     {
-        parent::__construct($name, $data, $dataName);
+        parent::setUp();
 
         $this->service = new KountService([
             'merchant' => '201000',
