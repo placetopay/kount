@@ -24,7 +24,7 @@ class InquiryResponseTest extends BaseTestCase
         $this->expectExceptionMessage("323 BAD_SITE Cause: [[TEST] does not exist for merchant [201000]], Field: [SITE], Value: [TEST]\n362 BAD_CART Cause: [Shopping cart type index[0] is missing], Field: [PROD_TYPE], Value: [1=>111, 2=>234]");
         $result = $this->unserialize('czo3MDE6Ik1PREU9RQpFUlJPPTMyMwpFUlJPUl8wPTMyMyBCQURfU0lURSBDYXVzZTogW1tURVNUXSBkb2VzIG5vdCBleGlzdCBmb3IgbWVyY2hhbnQgWzIwMTAwMF1dLCBGaWVsZDogW1NJVEVdLCBWYWx1ZTogW1RFU1RdCkVSUk9SXzE9MzYyIEJBRF9DQVJUIENhdXNlOiBbU2hvcHBpbmcgY2FydCB0eXBlIGluZGV4WzBdIGlzIG1pc3NpbmddLCBGaWVsZDogW1BST0RfVFlQRV0sIFZhbHVlOiBbMT0+MTExLCAyPT4yMzRdCkVSUk9SX0NPVU5UPTIKV0FSTklOR18wPTM5OSBCQURfT1BUTiBDYXVzZTogW3ZhbHVlIFsxMjNdIGRpZCBub3QgbWF0Y2ggcmVnZXggL14oW01OWF0/KT8kL10sIEZpZWxkOiBbQ1ZWUl0sIFZhbHVlOiBbMTIzXQpXQVJOSU5HXzE9Mzk5IEJBRF9PUFROIEZpZWxkOiBbVURGXSwgVmFsdWU6IFtrZXlfMT0+U29tZSBWYWx1ZSAxLCBrZXlfMj0+U29tZSBWYWx1ZSAyLCBrZXlfMz0+U29tZSBWYWx1ZSAzXQpXQVJOSU5HXzI9Mzk5IEJBRF9PUFROIEZpZWxkOiBbVURGXSwgVmFsdWU6IFtUaGUgbGFiZWwgW2tleV8xXSBpcyBub3QgZGVmaW5lZCBmb3IgbWVyY2hhbnQgSUQgWzIwMTAwMF0uIFRoZSBsYWJlbCBba2V5XzJdIGlzIG5vdCBkZWZpbmVkIGZvciBtZXJjaGFudCBJRCBbMjAxMDAwXS4gVGhlIGxhYmVsIFtrZXlfM10gaXMgbm90IGRlZmluZWQgZm9yIG1lcmNoYW50IElEIFsyMDEwMDBdLl0KV0FSTklOR19DT1VOVD0zIjs=');
 
-        $errorsResponse = (new InquiryResponse($result))->errors;
+        $errorsResponse = new InquiryResponse($result)->errors;
 
         $this->assertTrue($errorsResponse->isErrorResponse());
         $this->assertEquals('323', $errorsResponse->code());
