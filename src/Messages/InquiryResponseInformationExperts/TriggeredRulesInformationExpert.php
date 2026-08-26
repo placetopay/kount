@@ -20,7 +20,7 @@ class TriggeredRulesInformationExpert extends InquiryResponseInformationExpert
         $rules = [];
 
         for ($i = 0; $i < $this->count(); $i++) {
-            $rules[$this->data("RULE_ID_$i")] = $this->data("RULE_DESCRIPTION_$i");
+            $rules[$this->data("RULE_ID_$i") ?? ''] = $this->data("RULE_DESCRIPTION_$i");
         }
 
         return $rules;

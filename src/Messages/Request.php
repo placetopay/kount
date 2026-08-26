@@ -60,9 +60,6 @@ abstract class Request
     protected $session;
     protected $data;
 
-    /**
-     * @return array
-     */
     abstract public function asRequestData(): array;
 
     public function __construct($session, $data = [])
@@ -145,6 +142,6 @@ abstract class Request
         ];
         $decimals = $currenciesDecimals[$currency] ?? 2;
 
-        return (int)(round($total, $decimals) * pow(10, $decimals));
+        return (int)(round($total, $decimals) * 10 ** $decimals);
     }
 }

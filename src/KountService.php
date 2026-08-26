@@ -13,12 +13,12 @@ use PlacetoPay\Kount\Messages\UpdateResponse;
 
 class KountService
 {
-    private const DDC_URL = 'https://ssl.kaptcha.com';
-    private const RIS_URL = 'https://risk.kount.net';
-    private const SANDBOX_DDC_URL = 'https://tst.kaptcha.com';
-    private const SANDBOX_RIS_URL = 'https://risk.test.kount.net';
+    private const string DDC_URL = 'https://ssl.kaptcha.com';
+    private const string RIS_URL = 'https://risk.kount.net';
+    private const string SANDBOX_DDC_URL = 'https://tst.kaptcha.com';
+    private const string SANDBOX_RIS_URL = 'https://risk.test.kount.net';
 
-    private const VERSION = '0720';
+    private const string VERSION = '0720';
 
     protected $merchant;
     protected $apiKey;
