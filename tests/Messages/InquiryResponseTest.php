@@ -391,7 +391,7 @@ class InquiryResponseTest extends BaseTestCase
                 'browser' => 'Chrome 58.0.3029.110',
                 'wasPreviouslyWhitelisted' => false,
             ],
-            'triggeredRules' =>  [
+            'triggeredRules' => [
                 '729832' => 'Billing Country is not BIN Country',
                 '729852' => 'Decline Network Chargebacks >1',
                 '729854' => 'Review Non-Normal Network Type',

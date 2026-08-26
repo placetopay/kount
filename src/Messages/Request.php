@@ -57,10 +57,15 @@ abstract class Request
     protected $merchant;
     protected $website;
 
+    protected $session;
+    protected $data;
+
     abstract public function asRequestData(): array;
 
-    public function __construct(protected $session, protected $data = [])
+    public function __construct($session, $data = [])
     {
+        $this->session = $session;
+        $this->data = $data;
     }
 
     public function setMode($mode): self
