@@ -3,15 +3,16 @@
 namespace Tests\Parsings;
 
 use PlacetoPay\Kount\KountService;
+use PlacetoPay\Kount\Messages\Request;
 use Tests\BaseTestCase;
 
 class ParsingTest extends BaseTestCase
 {
-    protected $service;
+    protected KountService $service;
 
-    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    protected function setUp(): void
     {
-        parent::__construct($name, $data, $dataName);
+        parent::setUp();
 
         $this->service = new KountService([
             'merchant' => '201000',
@@ -22,7 +23,7 @@ class ParsingTest extends BaseTestCase
 
     public function basicRequestData(array $overrides = []): array
     {
-        $data = \array_replace_recursive([
+        return \array_replace_recursive([
             'mack' => 'Y',
             'payment' => [
                 'reference' => 'TEST_20170601_201117',
@@ -59,11 +60,9 @@ class ParsingTest extends BaseTestCase
             'ipAddress' => '127.0.0.1',
             'userAgent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
         ], $overrides);
-
-        return $data;
     }
 
-    public function testItParsesTheInquiryRequestInformationCorrectly()
+    public function testItParsesTheInquiryRequestInformationCorrectly(): void
     {
         $data = $this->basicRequestData([
             'payer' => [
@@ -119,7 +118,7 @@ class ParsingTest extends BaseTestCase
             'additional' => [
                 'key_1' => 'Some Value 1',
             ],
-            'shipmentType' => \PlacetoPay\Kount\Messages\Request::SHIP_SAME,
+            'shipmentType' => Request::SHIP_SAME,
         ]);
 
         $inquiryRequest = $this->service->parseInquiryRequest('123', $data);
@@ -188,7 +187,7 @@ class ParsingTest extends BaseTestCase
         ], $inquiryRequest->asRequestHeaders(), 'Parses the inquiry headers correctly');
     }
 
-    public function testItParsesAShortRequest()
+    public function testItParsesAShortRequest(): void
     {
         $data = $this->basicRequestData();
 
@@ -235,7 +234,7 @@ class ParsingTest extends BaseTestCase
         ], $inquiryRequest->asRequestHeaders(), 'Parses the inquiry headers correctly');
     }
 
-    public function testItParsesCorrectlyAnotherAmounts()
+    public function testItParsesCorrectlyAnotherAmounts(): void
     {
         $data = $this->basicRequestData(['payment' => [
             'amount' => [

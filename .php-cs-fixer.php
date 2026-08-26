@@ -2,19 +2,19 @@
 
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
 $rules = [
     '@PSR12' => true,
     'phpdoc_indent' => true,
     'binary_operator_spaces' => [
-        'operators' => ['=>' => null],
+        'operators' => ['=>' => 'single_space'],
     ],
     'blank_line_after_namespace' => true,
     'blank_line_after_opening_tag' => true,
     'blank_line_before_statement' => [
         'statements' => ['declare'],
     ],
-    'braces' => true,
     'cast_spaces' => [
         'space' => 'none',
     ],
@@ -27,7 +27,6 @@ $rules = [
     'encoding' => true,
     'full_opening_tag' => true,
     'function_declaration' => true,
-    'function_typehint_space' => true,
     'single_line_comment_style' => [
         'comment_types' => ['hash'],
     ],
@@ -42,7 +41,6 @@ $rules = [
     'magic_method_casing' => true, // added from Symfony
     'method_argument_space' => true,
     'class_attributes_separation' => false,
-    'visibility_required' => true,
     'native_function_casing' => true,
     'no_alias_functions' => true,
     'no_blank_lines_after_class_opening' => true,
@@ -59,8 +57,6 @@ $rules = [
     'no_singleline_whitespace_before_semicolons' => true,
     'no_spaces_after_function_name' => true,
     'no_spaces_around_offset' => true,
-    'no_spaces_inside_parenthesis' => true,
-    'no_trailing_comma_in_list_call' => true,
     'no_trailing_whitespace' => true,
     'no_trailing_whitespace_in_comment' => true,
     'no_unneeded_control_parentheses' => true,
@@ -109,8 +105,20 @@ $rules = [
     'logical_operators' => true,
     'short_scalar_cast' => true,
     'no_unset_cast' => true,
-    'no_trailing_comma_in_singleline_array' => true,
-    'single_blank_line_before_namespace' => true,
+
+    // Modern replacements for deprecated rules
+    'single_space_around_construct' => true,
+    'control_structure_braces' => true,
+    'control_structure_continuation_position' => true,
+    'declare_parentheses' => true,
+    'no_multiple_statements_per_line' => true,
+    'braces_position' => true,
+    'statement_indentation' => true,
+    'type_declaration_spaces' => true,
+    'spaces_inside_parentheses' => true,
+    'no_trailing_comma_in_singleline' => true,
+    'blank_lines_before_namespace' => true,
+    'modifier_keywords' => true,
 ];
 
 $finder = Finder::create()
@@ -131,4 +139,6 @@ return (new Config())
     ->setFinder($finder)
     ->setRules($rules)
     ->setRiskyAllowed(true)
-    ->setUsingCache(true);
+    ->setUsingCache(true)
+    ->setCacheFile(__DIR__ . '/.php-cs-fixer.cache')
+    ->setParallelConfig(ParallelConfigFactory::detect());

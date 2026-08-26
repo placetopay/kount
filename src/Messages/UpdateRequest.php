@@ -11,9 +11,6 @@ class UpdateRequest extends Request
         $this->mode = self::MODE_UPDATE;
     }
 
-    /**
-     * @return array
-     */
     public function asRequestData(): array
     {
         $requestData = [

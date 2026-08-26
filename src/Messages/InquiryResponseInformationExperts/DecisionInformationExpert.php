@@ -15,7 +15,7 @@ class DecisionInformationExpert extends InquiryResponseInformationExpert
 
     public function description(): ?string
     {
-        return DecisionReasons::REASONS[$this->code()] ?: DecisionReasons::ERROR;
+        return DecisionReasons::REASONS[$this->code() ?? ''] ?? DecisionReasons::ERROR;
     }
 
     public function shouldApprove(): bool
