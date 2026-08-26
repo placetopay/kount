@@ -8,7 +8,7 @@ $rules = [
     '@PSR12' => true,
     'phpdoc_indent' => true,
     'binary_operator_spaces' => [
-        'operators' => ['=>' => null],
+        'operators' => ['=>' => 'single_space'],
     ],
     'blank_line_after_namespace' => true,
     'blank_line_after_opening_tag' => true,
