@@ -20,7 +20,7 @@ class TriggeredCountersInformationExpert extends InquiryResponseInformationExper
         $counters = [];
 
         for ($i = 0; $i < $this->count(); $i++) {
-            $counters[$this->data("COUNTER_NAME_$i")] = $this->data("COUNTER_VALUE_$i");
+            $counters[$this->data("COUNTER_NAME_$i") ?? ''] = $this->data("COUNTER_VALUE_$i");
         }
 
         return $counters;
